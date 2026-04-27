@@ -1,1 +1,4 @@
-<Solution />
+<Solution>
+  <Project Path="HeroSimulator.App/HeroSimulator.App.csproj" />
+  <Project Path="HeroSimulator.Core/HeroSimulator.Core.csproj" />
+</Solution>
