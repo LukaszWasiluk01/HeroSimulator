@@ -1,4 +1,5 @@
-﻿using HeroSimulator.Core.Enums;
+﻿using HeroSimulator.Core.Delegates;
+using HeroSimulator.Core.Enums;
 using HeroSimulator.Core.Exceptions;
 using HeroSimulator.Core.Models;
 using HeroSimulator.Core.Models.Entities;
@@ -14,10 +15,18 @@ namespace HeroSimulator.Core.Services
         private readonly Hero _hero;
         private readonly Random _random;
 
+        public event GameStateChangedHandler OnGameStateChanged;
+        public event LogMessageHandler OnLogMessage;
+
         public GameService(Hero hero)
         {
             _hero = hero;
             _random = new Random();
+        }
+
+        public Hero GetHero()
+        {
+            return _hero;
         }
 
         public List<Quest> GenerateDailyQuests(int count = 3)
@@ -71,10 +80,14 @@ namespace HeroSimulator.Core.Services
             _hero.Gold += quest.GoldReward;
             _hero.Experience += quest.ExperienceReward;
 
+            OnLogMessage?.Invoke($"Zakonczono misje: {quest.Description}. Zdobyto {quest.GoldReward} zlota i {quest.ExperienceReward} exp.");
+
             if (_hero.Experience >= _hero.ExperienceToNextLevel)
             {
                 LevelUp();
             }
+
+            OnGameStateChanged?.Invoke();
         }
 
         public void BuyItem(Item item)
@@ -90,12 +103,81 @@ namespace HeroSimulator.Core.Services
 
             _hero.Gold -= item.Price;
             _hero.Backpack.Add(item);
+
+            OnLogMessage?.Invoke($"Kupiono przedmiot: {item.Name} za {item.Price} zlota.");
+            OnGameStateChanged?.Invoke();
+        }
+
+        public void EquipItem(Item item)
+        {
+            if (_hero.Backpack.Contains(item))
+            {
+                _hero.Backpack.Remove(item);
+                _hero.Equipped.Add(item);
+                OnLogMessage?.Invoke($"Zalozono: {item.Name}.");
+                OnGameStateChanged?.Invoke();
+            }
+        }
+
+        public void UnequipItem(Item item)
+        {
+            if (_hero.Equipped.Contains(item))
+            {
+                if (_hero.Backpack.Count >= 10)
+                {
+                    throw new InventoryFullException("Plecak jest pelen, nie mozna zdjac przedmiotu.");
+                }
+                _hero.Equipped.Remove(item);
+                _hero.Backpack.Add(item);
+                OnLogMessage?.Invoke($"Zdjete: {item.Name}.");
+                OnGameStateChanged?.Invoke();
+            }
+        }
+
+        public int GetAttributeUpgradeCost(int currentValue)
+        {
+            return 10 + (currentValue * 5);
+        }
+
+        public void UpgradeStrength()
+        {
+            int cost = GetAttributeUpgradeCost(_hero.Strength);
+            if (_hero.Gold < cost) throw new NotEnoughGoldException("Brak zlota na ulepszenie Sily.");
+
+            _hero.Gold -= cost;
+            _hero.Strength++;
+            OnLogMessage?.Invoke($"Ulepszono Sile za {cost} zlota.");
+            OnGameStateChanged?.Invoke();
+        }
+
+        public void UpgradeDexterity()
+        {
+            int cost = GetAttributeUpgradeCost(_hero.Dexterity);
+            if (_hero.Gold < cost) throw new NotEnoughGoldException("Brak zlota na ulepszenie Zrecznosci.");
+
+            _hero.Gold -= cost;
+            _hero.Dexterity++;
+            OnLogMessage?.Invoke($"Ulepszono Zrecznosc za {cost} zlota.");
+            OnGameStateChanged?.Invoke();
+        }
+
+        public void UpgradeIntelligence()
+        {
+            int cost = GetAttributeUpgradeCost(_hero.Intelligence);
+            if (_hero.Gold < cost) throw new NotEnoughGoldException("Brak zlota na ulepszenie Inteligencji.");
+
+            _hero.Gold -= cost;
+            _hero.Intelligence++;
+            OnLogMessage?.Invoke($"Ulepszono Inteligencje za {cost} zlota.");
+            OnGameStateChanged?.Invoke();
         }
 
         public void EndDay()
         {
             _hero.CurrentDay++;
             _hero.Energy = _hero.MaxEnergy;
+            OnLogMessage?.Invoke($"Rozpoczeto dzien {_hero.CurrentDay}. Energia odnowiona.");
+            OnGameStateChanged?.Invoke();
         }
 
         private void LevelUp()
@@ -107,6 +189,8 @@ namespace HeroSimulator.Core.Services
             _hero.CurrentHp = _hero.MaxHp;
             _hero.MaxEnergy += 10;
             _hero.Energy = _hero.MaxEnergy;
+
+            OnLogMessage?.Invoke($"Awans na {_hero.Level} poziom! Odnowiono zdrowie i energie.");
         }
     }
 }
