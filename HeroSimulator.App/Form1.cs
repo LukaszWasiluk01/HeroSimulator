@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Windows.Forms;
 using HeroSimulator.Core.Models;
 using HeroSimulator.Core.Models.Entities;
@@ -25,13 +26,41 @@ namespace HeroSimulator.App
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            StartNewGame();
+            if (File.Exists(_saveFilePath))
+            {
+                try
+                {
+                    var loadedHero = _saveLoadService.LoadGame(_saveFilePath);
+                    if (loadedHero != null)
+                    {
+                        InitializeGameService(loadedHero);
+                        AddLog("Wczytano zapis gry.");
+                        return;
+                    }
+                }
+                catch (Exception)
+                {
+                    AddLog("Blad wczytywania pliku. Utworz nowa postac.");
+                }
+            }
+
+            ShowCharacterCreation();
         }
 
-        private void StartNewGame()
+        private void ShowCharacterCreation()
         {
-            var defaultHero = new Warrior("Student");
-            InitializeGameService(defaultHero);
+            using (var creationForm = new CharacterCreationForm())
+            {
+                if (creationForm.ShowDialog() == DialogResult.OK)
+                {
+                    InitializeGameService(creationForm.CreatedHero);
+                    _saveLoadService.SaveGame(_gameService.GetHero(), _saveFilePath);
+                }
+                else
+                {
+                    Application.Exit();
+                }
+            }
         }
 
         private void InitializeGameService(Hero hero)
@@ -77,13 +106,13 @@ namespace HeroSimulator.App
             lbBackpack.Items.Clear();
             foreach (var item in hero.Backpack)
             {
-                lbBackpack.Items.Add($"{item.Name} | +{item.BonusStrength + item.BonusDexterity + item.BonusIntelligence + item.BonusArmour} Statystyki");
+                lbBackpack.Items.Add($"{item.Name}");
             }
 
             lbEquipped.Items.Clear();
             foreach (var item in hero.Equipped)
             {
-                lbEquipped.Items.Add($"{item.Name} | +{item.BonusStrength + item.BonusDexterity + item.BonusIntelligence + item.BonusArmour} Statystyki");
+                lbEquipped.Items.Add($"{item.Name}");
             }
         }
 
@@ -99,90 +128,55 @@ namespace HeroSimulator.App
             lbQuests.Items.Clear();
             foreach (var quest in _currentQuests)
             {
-                lbQuests.Items.Add($"[{quest.Difficulty}] {quest.Description} | Koszt: {quest.EnergyCost} | Nagroda: {quest.GoldReward}g");
+                lbQuests.Items.Add($"[{quest.Difficulty}] {quest.Description} ({quest.EnergyCost} nrg)");
             }
 
             _currentShopItems = _gameService.GenerateShopItems();
             lbShop.Items.Clear();
             foreach (var item in _currentShopItems)
             {
-                lbShop.Items.Add($"{item.Name} [{item.Rarity}] | Cena: {item.Price} zlota");
-            }
-        }
-
-        private void zapiszGręToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            _saveLoadService.SaveGame(_gameService.GetHero(), _saveFilePath);
-            AddLog("Stan gry zostal zapisany na dysku.");
-        }
-
-        private void wczytajGręToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            var loadedHero = _saveLoadService.LoadGame(_saveFilePath);
-            if (loadedHero != null)
-            {
-                InitializeGameService(loadedHero);
-                AddLog("Stan gry zostal wczytany.");
-            }
-            else
-            {
-                MessageBox.Show("Nie znaleziono pliku zapisu.", "Blad", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                lbShop.Items.Add($"{item.Name} ({item.Price}g)");
             }
         }
 
         private void btnBuyStr_Click(object sender, EventArgs e)
         {
             try { _gameService.UpgradeStrength(); }
-            catch (Exception ex) { MessageBox.Show(ex.Message, "Blad", MessageBoxButtons.OK, MessageBoxIcon.Warning); }
+            catch (Exception ex) { MessageBox.Show(ex.Message); }
         }
 
         private void btnBuyDex_Click(object sender, EventArgs e)
         {
             try { _gameService.UpgradeDexterity(); }
-            catch (Exception ex) { MessageBox.Show(ex.Message, "Blad", MessageBoxButtons.OK, MessageBoxIcon.Warning); }
+            catch (Exception ex) { MessageBox.Show(ex.Message); }
         }
 
         private void btnBuyInt_Click(object sender, EventArgs e)
         {
             try { _gameService.UpgradeIntelligence(); }
-            catch (Exception ex) { MessageBox.Show(ex.Message, "Blad", MessageBoxButtons.OK, MessageBoxIcon.Warning); }
+            catch (Exception ex) { MessageBox.Show(ex.Message); }
         }
 
         private void btnEquip_Click(object sender, EventArgs e)
         {
-            var hero = _gameService.GetHero();
             try
             {
                 if (lbBackpack.SelectedIndex != -1)
-                {
-                    _gameService.EquipItem(hero.Backpack[lbBackpack.SelectedIndex]);
-                }
+                    _gameService.EquipItem(_gameService.GetHero().Backpack[lbBackpack.SelectedIndex]);
                 else if (lbEquipped.SelectedIndex != -1)
-                {
-                    _gameService.UnequipItem(hero.Equipped[lbEquipped.SelectedIndex]);
-                }
+                    _gameService.UnequipItem(_gameService.GetHero().Equipped[lbEquipped.SelectedIndex]);
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Blad", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
+            catch (Exception ex) { MessageBox.Show(ex.Message); }
         }
 
         private void btnStartQuest_Click(object sender, EventArgs e)
         {
             if (lbQuests.SelectedIndex == -1) return;
-
             try
             {
-                var selectedQuest = _currentQuests[lbQuests.SelectedIndex];
-                _gameService.StartQuest(selectedQuest);
-                _currentQuests.RemoveAt(lbQuests.SelectedIndex);
-                lbQuests.Items.RemoveAt(lbQuests.SelectedIndex);
+                _gameService.StartQuest(_currentQuests[lbQuests.SelectedIndex]);
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Blad energii", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            catch (Exception ex) { MessageBox.Show(ex.Message); }
         }
 
         private void btnEndDay_Click(object sender, EventArgs e)
@@ -194,18 +188,36 @@ namespace HeroSimulator.App
         private void btnBuyItem_Click(object sender, EventArgs e)
         {
             if (lbShop.SelectedIndex == -1) return;
-
             try
             {
-                var selectedItem = _currentShopItems[lbShop.SelectedIndex];
-                _gameService.BuyItem(selectedItem);
-                _currentShopItems.RemoveAt(lbShop.SelectedIndex);
-                lbShop.Items.RemoveAt(lbShop.SelectedIndex);
+                _gameService.BuyItem(_currentShopItems[lbShop.SelectedIndex]);
             }
-            catch (Exception ex)
+            catch (Exception ex) { MessageBox.Show(ex.Message); }
+        }
+
+        private void btnRestartGame_Click(object sender, EventArgs e)
+        {
+            var result = MessageBox.Show("Czy na pewno usunac zapis?", "Reset", MessageBoxButtons.YesNo);
+            if (result == DialogResult.Yes)
             {
-                MessageBox.Show(ex.Message, "Blad sklepu", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                if (File.Exists(_saveFilePath)) File.Delete(_saveFilePath);
+                Application.Restart();
             }
+        }
+
+        private void btnSaveGame_Click(object sender, EventArgs e)
+        {
+            if (_gameService != null)
+            {
+                _saveLoadService.SaveGame(_gameService.GetHero(), _saveFilePath);
+                AddLog("Gra zostala zapisana.");
+            }
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (_gameService != null)
+                _saveLoadService.SaveGame(_gameService.GetHero(), _saveFilePath);
         }
     }
 }

@@ -30,8 +30,8 @@
         {
             menuStrip1 = new MenuStrip();
             plikToolStripMenuItem = new ToolStripMenuItem();
-            zapiszGręToolStripMenuItem = new ToolStripMenuItem();
-            wczytajGręToolStripMenuItem = new ToolStripMenuItem();
+            btnRestartGame = new ToolStripMenuItem();
+            btnSaveGame = new ToolStripMenuItem();
             tabControl1 = new TabControl();
             tabPage1 = new TabPage();
             btnBuyInt = new Button();
@@ -83,24 +83,23 @@
             // 
             // plikToolStripMenuItem
             // 
-            plikToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { zapiszGręToolStripMenuItem, wczytajGręToolStripMenuItem });
+            plikToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { btnRestartGame, btnSaveGame });
             plikToolStripMenuItem.Name = "plikToolStripMenuItem";
             plikToolStripMenuItem.Size = new Size(38, 20);
             plikToolStripMenuItem.Text = "Plik";
             // 
-            // zapiszGręToolStripMenuItem
+            // btnRestartGame
             // 
-            zapiszGręToolStripMenuItem.Name = "zapiszGręToolStripMenuItem";
-            zapiszGręToolStripMenuItem.Size = new Size(135, 22);
-            zapiszGręToolStripMenuItem.Text = "Zapisz grę";
-            zapiszGręToolStripMenuItem.Click += zapiszGręToolStripMenuItem_Click;
+            btnRestartGame.Name = "btnRestartGame";
+            btnRestartGame.Size = new Size(180, 22);
+            btnRestartGame.Text = "Zacznij od nowa";
             // 
-            // wczytajGręToolStripMenuItem
+            // btnSaveGame
             // 
-            wczytajGręToolStripMenuItem.Name = "wczytajGręToolStripMenuItem";
-            wczytajGręToolStripMenuItem.Size = new Size(135, 22);
-            wczytajGręToolStripMenuItem.Text = "Wczytaj grę";
-            wczytajGręToolStripMenuItem.Click += wczytajGręToolStripMenuItem_Click;
+            btnSaveGame.Name = "btnSaveGame";
+            btnSaveGame.Size = new Size(180, 22);
+            btnSaveGame.Text = "Zapisz grę";
+            btnSaveGame.Click += btnSaveGame_Click;
             // 
             // tabControl1
             // 
@@ -407,9 +406,9 @@
             // 
             // pbEnergy
             // 
-            pbEnergy.Location = new Point(126, 13);
+            pbEnergy.Location = new Point(154, 13);
             pbEnergy.Name = "pbEnergy";
-            pbEnergy.Size = new Size(624, 23);
+            pbEnergy.Size = new Size(596, 23);
             pbEnergy.TabIndex = 2;
             // 
             // lblEnergy
@@ -494,8 +493,8 @@
 
         private MenuStrip menuStrip1;
         private ToolStripMenuItem plikToolStripMenuItem;
-        private ToolStripMenuItem zapiszGręToolStripMenuItem;
-        private ToolStripMenuItem wczytajGręToolStripMenuItem;
+        private ToolStripMenuItem btnRestartGame;
+        private ToolStripMenuItem btnSaveGame;
         private TabControl tabControl1;
         private TabPage tabPage1;
         private TabPage tabPage2;
