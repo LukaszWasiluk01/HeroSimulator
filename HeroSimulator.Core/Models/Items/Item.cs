@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Text.Json.Serialization;
 using HeroSimulator.Core.Enums;
 
 namespace HeroSimulator.Core.Models.Items
 {
+    [JsonDerivedType(typeof(Weapon), "Weapon")]
+    [JsonDerivedType(typeof(Armor), "Armor")]
     public abstract class Item
     {
         public string Id { get; set; }

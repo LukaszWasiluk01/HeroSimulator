@@ -1,12 +1,13 @@
-﻿using HeroSimulator.Core.Models.Items;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Text.Json.Serialization;
+using HeroSimulator.Core.Models.Items;
 
 namespace HeroSimulator.Core.Models.Entities
 {
+    [JsonDerivedType(typeof(Warrior), "Warrior")]
+    [JsonDerivedType(typeof(Mage), "Mage")]
+    [JsonDerivedType(typeof(Scout), "Scout")]
     public abstract class Hero : Entity
     {
         public int Gold { get; set; }
