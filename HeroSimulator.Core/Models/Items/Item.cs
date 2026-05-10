@@ -1,11 +1,17 @@
-﻿using System;
+﻿using HeroSimulator.Core.Enums;
+using System;
+using System.Net.NetworkInformation;
 using System.Text.Json.Serialization;
-using HeroSimulator.Core.Enums;
+using static System.Reflection.Metadata.BlobBuilder;
 
 namespace HeroSimulator.Core.Models.Items
 {
     [JsonDerivedType(typeof(Weapon), "Weapon")]
     [JsonDerivedType(typeof(Armor), "Armor")]
+    [JsonDerivedType(typeof(Pants), "Pants")]
+    [JsonDerivedType(typeof(Boots), "Boots")]
+    [JsonDerivedType(typeof(Amulet), "Amulet")]
+    [JsonDerivedType(typeof(Ring), "Ring")]
     public abstract class Item
     {
         public string Id { get; set; }

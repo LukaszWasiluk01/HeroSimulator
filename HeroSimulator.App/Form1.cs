@@ -79,6 +79,16 @@ namespace HeroSimulator.App
             UpdateUI();
         }
 
+        private string FormatItemStats(Item item)
+        {
+            var stats = new List<string>();
+            if (item.BonusStrength > 0) stats.Add($"+{item.BonusStrength} STR");
+            if (item.BonusDexterity > 0) stats.Add($"+{item.BonusDexterity} DEX");
+            if (item.BonusIntelligence > 0) stats.Add($"+{item.BonusIntelligence} INT");
+            if (item.BonusArmour > 0) stats.Add($"+{item.BonusArmour} PANCERZ");
+            return string.Join(", ", stats);
+        }
+
         private void UpdateUI()
         {
             var hero = _gameService.GetHero();
@@ -87,6 +97,11 @@ namespace HeroSimulator.App
             lblLevel.Text = $"Poziom: {hero.Level}";
             lblGold.Text = $"Zloto: {hero.Gold}";
             lblDay.Text = $"Dzien: {hero.CurrentDay}";
+
+            if (tabControl1.TabPages.Count >= 3)
+            {
+                tabControl1.TabPages[2].Text = $"Sklep (Zloto: {hero.Gold})";
+            }
 
             pbHp.Maximum = hero.MaxHp;
             pbHp.Value = Math.Min(hero.CurrentHp, hero.MaxHp);
@@ -106,14 +121,16 @@ namespace HeroSimulator.App
             lbBackpack.Items.Clear();
             foreach (var item in hero.Backpack)
             {
-                lbBackpack.Items.Add($"{item.Name}");
+                lbBackpack.Items.Add($"{item.Name} | {FormatItemStats(item)}");
             }
 
             lbEquipped.Items.Clear();
-            foreach (var item in hero.Equipped)
-            {
-                lbEquipped.Items.Add($"{item.Name}");
-            }
+            lbEquipped.Items.Add(hero.EquippedWeapon != null ? $"[Bron] {hero.EquippedWeapon.Name} | {FormatItemStats(hero.EquippedWeapon)}" : "[Bron] Puste");
+            lbEquipped.Items.Add(hero.EquippedArmor != null ? $"[Zbroja] {hero.EquippedArmor.Name} | {FormatItemStats(hero.EquippedArmor)}" : "[Zbroja] Puste");
+            lbEquipped.Items.Add(hero.EquippedPants != null ? $"[Spodnie] {hero.EquippedPants.Name} | {FormatItemStats(hero.EquippedPants)}" : "[Spodnie] Puste");
+            lbEquipped.Items.Add(hero.EquippedBoots != null ? $"[Buty] {hero.EquippedBoots.Name} | {FormatItemStats(hero.EquippedBoots)}" : "[Buty] Puste");
+            lbEquipped.Items.Add(hero.EquippedAmulet != null ? $"[Amulet] {hero.EquippedAmulet.Name} | {FormatItemStats(hero.EquippedAmulet)}" : "[Amulet] Puste");
+            lbEquipped.Items.Add(hero.EquippedRing != null ? $"[Pierscien] {hero.EquippedRing.Name} | {FormatItemStats(hero.EquippedRing)}" : "[Pierscien] Puste");
         }
 
         private void AddLog(string message)
@@ -124,18 +141,18 @@ namespace HeroSimulator.App
 
         private void RefreshTavernAndShop()
         {
-            _currentQuests = _gameService.GenerateDailyQuests();
+            _currentQuests = _gameService.GenerateDailyQuests(3);
             lbQuests.Items.Clear();
             foreach (var quest in _currentQuests)
             {
-                lbQuests.Items.Add($"[{quest.Difficulty}] {quest.Description} ({quest.EnergyCost} nrg)");
+                lbQuests.Items.Add($"[{quest.Difficulty}] {quest.Description} ({quest.EnergyCost} energii)");
             }
 
             _currentShopItems = _gameService.GenerateShopItems();
             lbShop.Items.Clear();
             foreach (var item in _currentShopItems)
             {
-                lbShop.Items.Add($"{item.Name} ({item.Price}g)");
+                lbShop.Items.Add($"{item.Name} [{item.Rarity}] | {FormatItemStats(item)} | Cena: {item.Price}g");
             }
         }
 
@@ -162,9 +179,21 @@ namespace HeroSimulator.App
             try
             {
                 if (lbBackpack.SelectedIndex != -1)
+                {
                     _gameService.EquipItem(_gameService.GetHero().Backpack[lbBackpack.SelectedIndex]);
+                }
                 else if (lbEquipped.SelectedIndex != -1)
-                    _gameService.UnequipItem(_gameService.GetHero().Equipped[lbEquipped.SelectedIndex]);
+                {
+                    var hero = _gameService.GetHero();
+                    int index = lbEquipped.SelectedIndex;
+
+                    if (index == 0 && hero.EquippedWeapon != null) _gameService.UnequipItem(hero.EquippedWeapon);
+                    else if (index == 1 && hero.EquippedArmor != null) _gameService.UnequipItem(hero.EquippedArmor);
+                    else if (index == 2 && hero.EquippedPants != null) _gameService.UnequipItem(hero.EquippedPants);
+                    else if (index == 3 && hero.EquippedBoots != null) _gameService.UnequipItem(hero.EquippedBoots);
+                    else if (index == 4 && hero.EquippedAmulet != null) _gameService.UnequipItem(hero.EquippedAmulet);
+                    else if (index == 5 && hero.EquippedRing != null) _gameService.UnequipItem(hero.EquippedRing);
+                }
             }
             catch (Exception ex) { MessageBox.Show(ex.Message); }
         }
@@ -175,6 +204,12 @@ namespace HeroSimulator.App
             try
             {
                 _gameService.StartQuest(_currentQuests[lbQuests.SelectedIndex]);
+                _currentQuests = _gameService.GenerateDailyQuests(3);
+                lbQuests.Items.Clear();
+                foreach (var quest in _currentQuests)
+                {
+                    lbQuests.Items.Add($"[{quest.Difficulty}] {quest.Description} ({quest.EnergyCost} energii)");
+                }
             }
             catch (Exception ex) { MessageBox.Show(ex.Message); }
         }
@@ -191,6 +226,8 @@ namespace HeroSimulator.App
             try
             {
                 _gameService.BuyItem(_currentShopItems[lbShop.SelectedIndex]);
+                _currentShopItems.RemoveAt(lbShop.SelectedIndex);
+                lbShop.Items.RemoveAt(lbShop.SelectedIndex);
             }
             catch (Exception ex) { MessageBox.Show(ex.Message); }
         }

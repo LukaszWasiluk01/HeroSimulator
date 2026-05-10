@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace HeroSimulator.Core.Models.Entities
+﻿namespace HeroSimulator.Core.Models.Entities
 {
     public class Mage : Hero
     {
@@ -18,7 +12,9 @@ namespace HeroSimulator.Core.Models.Entities
 
         public override int CalculateDamage()
         {
-            int equipmentBonus = Equipped.Sum(i => i.BonusIntelligence);
+            int equipmentBonus = 0;
+            if (EquippedWeapon != null) equipmentBonus += EquippedWeapon.BonusIntelligence;
+            if (EquippedArmor != null) equipmentBonus += EquippedArmor.BonusIntelligence;
             return (Intelligence + equipmentBonus) * 3;
         }
     }
