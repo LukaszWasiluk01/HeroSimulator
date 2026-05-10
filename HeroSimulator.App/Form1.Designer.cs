@@ -28,10 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            menuStrip1 = new MenuStrip();
-            plikToolStripMenuItem = new ToolStripMenuItem();
-            btnRestartGame = new ToolStripMenuItem();
-            btnSaveGame = new ToolStripMenuItem();
             tabControl1 = new TabControl();
             tabPage1 = new TabPage();
             btnBuyInt = new Button();
@@ -65,41 +61,17 @@
             btnBuyItem = new Button();
             lbShop = new ListBox();
             label3 = new Label();
-            menuStrip1.SuspendLayout();
+            plikToolStripMenuItem = new ToolStripMenuItem();
+            btnRestartGame = new ToolStripMenuItem();
+            btnSaveGame = new ToolStripMenuItem();
+            menuStrip1 = new MenuStrip();
+            btnSell = new Button();
             tabControl1.SuspendLayout();
             tabPage1.SuspendLayout();
             tabPage2.SuspendLayout();
             tabPage3.SuspendLayout();
+            menuStrip1.SuspendLayout();
             SuspendLayout();
-            // 
-            // menuStrip1
-            // 
-            menuStrip1.Items.AddRange(new ToolStripItem[] { plikToolStripMenuItem });
-            menuStrip1.Location = new Point(0, 0);
-            menuStrip1.Name = "menuStrip1";
-            menuStrip1.Size = new Size(800, 24);
-            menuStrip1.TabIndex = 0;
-            menuStrip1.Text = "menuStrip1";
-            // 
-            // plikToolStripMenuItem
-            // 
-            plikToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { btnRestartGame, btnSaveGame });
-            plikToolStripMenuItem.Name = "plikToolStripMenuItem";
-            plikToolStripMenuItem.Size = new Size(38, 20);
-            plikToolStripMenuItem.Text = "Plik";
-            // 
-            // btnRestartGame
-            // 
-            btnRestartGame.Name = "btnRestartGame";
-            btnRestartGame.Size = new Size(180, 22);
-            btnRestartGame.Text = "Zacznij od nowa";
-            // 
-            // btnSaveGame
-            // 
-            btnSaveGame.Name = "btnSaveGame";
-            btnSaveGame.Size = new Size(180, 22);
-            btnSaveGame.Text = "Zapisz grę";
-            btnSaveGame.Click += btnSaveGame_Click;
             // 
             // tabControl1
             // 
@@ -114,6 +86,7 @@
             // 
             // tabPage1
             // 
+            tabPage1.Controls.Add(btnSell);
             tabPage1.Controls.Add(btnBuyInt);
             tabPage1.Controls.Add(btnBuyDex);
             tabPage1.Controls.Add(btnBuyStr);
@@ -210,7 +183,7 @@
             // 
             // btnEquip
             // 
-            btnEquip.Location = new Point(107, 165);
+            btnEquip.Location = new Point(154, 166);
             btnEquip.Name = "btnEquip";
             btnEquip.Size = new Size(96, 23);
             btnEquip.TabIndex = 9;
@@ -465,6 +438,46 @@
             label3.TabIndex = 2;
             label3.Text = "Dzisiejsza oferta handlarza:";
             // 
+            // plikToolStripMenuItem
+            // 
+            plikToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { btnRestartGame, btnSaveGame });
+            plikToolStripMenuItem.Name = "plikToolStripMenuItem";
+            plikToolStripMenuItem.Size = new Size(38, 20);
+            plikToolStripMenuItem.Text = "Plik";
+            // 
+            // btnRestartGame
+            // 
+            btnRestartGame.Name = "btnRestartGame";
+            btnRestartGame.Size = new Size(180, 22);
+            btnRestartGame.Text = "Zacznij od nowa";
+            btnRestartGame.Click += btnRestartGame_Click;
+            // 
+            // btnSaveGame
+            // 
+            btnSaveGame.Name = "btnSaveGame";
+            btnSaveGame.Size = new Size(180, 22);
+            btnSaveGame.Text = "Zapisz grę";
+            btnSaveGame.Click += btnSaveGame_Click;
+            // 
+            // menuStrip1
+            // 
+            menuStrip1.Items.AddRange(new ToolStripItem[] { plikToolStripMenuItem });
+            menuStrip1.Location = new Point(0, 0);
+            menuStrip1.Name = "menuStrip1";
+            menuStrip1.Size = new Size(800, 24);
+            menuStrip1.TabIndex = 0;
+            menuStrip1.Text = "menuStrip1";
+            // 
+            // btnSell
+            // 
+            btnSell.Location = new Point(256, 166);
+            btnSell.Name = "btnSell";
+            btnSell.Size = new Size(126, 23);
+            btnSell.TabIndex = 19;
+            btnSell.Text = "Sprzedaj (50% ceny)";
+            btnSell.UseVisualStyleBackColor = true;
+            btnSell.Click += btnSell_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -476,8 +489,6 @@
             Name = "Form1";
             Text = "Hero Simulator";
             Load += Form1_Load;
-            menuStrip1.ResumeLayout(false);
-            menuStrip1.PerformLayout();
             tabControl1.ResumeLayout(false);
             tabPage1.ResumeLayout(false);
             tabPage1.PerformLayout();
@@ -485,16 +496,13 @@
             tabPage2.PerformLayout();
             tabPage3.ResumeLayout(false);
             tabPage3.PerformLayout();
+            menuStrip1.ResumeLayout(false);
+            menuStrip1.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
 
         #endregion
-
-        private MenuStrip menuStrip1;
-        private ToolStripMenuItem plikToolStripMenuItem;
-        private ToolStripMenuItem btnRestartGame;
-        private ToolStripMenuItem btnSaveGame;
         private TabControl tabControl1;
         private TabPage tabPage1;
         private TabPage tabPage2;
@@ -528,5 +536,10 @@
         private Button btnBuyItem;
         private ListBox lbShop;
         private Label label3;
+        private ToolStripMenuItem plikToolStripMenuItem;
+        private ToolStripMenuItem btnRestartGame;
+        private ToolStripMenuItem btnSaveGame;
+        private MenuStrip menuStrip1;
+        private Button btnSell;
     }
 }
