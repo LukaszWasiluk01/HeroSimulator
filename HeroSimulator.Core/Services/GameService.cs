@@ -116,12 +116,31 @@ namespace HeroSimulator.Core.Services
             int heroDamage = _hero.CalculateDamage();
 
             int totalArmour = _hero.Armour;
+
             if (_hero.EquippedArmor != null)
+            {
                 totalArmour += _hero.EquippedArmor.BonusArmour;
+            }
             if (_hero.EquippedPants != null)
+            {
                 totalArmour += _hero.EquippedPants.BonusArmour;
+            }
             if (_hero.EquippedBoots != null)
+            {
                 totalArmour += _hero.EquippedBoots.BonusArmour;
+            }
+            if (_hero.EquippedWeapon != null)
+            {
+                totalArmour += _hero.EquippedWeapon.BonusArmour;
+            }
+            if (_hero.EquippedAmulet != null)
+            {
+                totalArmour += _hero.EquippedAmulet.BonusArmour;
+            }
+            if (_hero.EquippedRing != null)
+            {
+                totalArmour += _hero.EquippedRing.BonusArmour;
+            }
 
             bool won = false;
             while (true)
@@ -200,37 +219,49 @@ namespace HeroSimulator.Core.Services
                 if (item is Weapon weapon)
                 {
                     if (_hero.EquippedWeapon != null)
+                    {
                         _hero.Backpack.Add(_hero.EquippedWeapon);
+                    }
                     _hero.EquippedWeapon = weapon;
                 }
                 else if (item is Armor armor)
                 {
                     if (_hero.EquippedArmor != null)
+                    {
                         _hero.Backpack.Add(_hero.EquippedArmor);
+                    }
                     _hero.EquippedArmor = armor;
                 }
                 else if (item is Pants pants)
                 {
                     if (_hero.EquippedPants != null)
+                    {
                         _hero.Backpack.Add(_hero.EquippedPants);
+                    }
                     _hero.EquippedPants = pants;
                 }
                 else if (item is Boots boots)
                 {
                     if (_hero.EquippedBoots != null)
+                    {
                         _hero.Backpack.Add(_hero.EquippedBoots);
+                    }
                     _hero.EquippedBoots = boots;
                 }
                 else if (item is Amulet amulet)
                 {
                     if (_hero.EquippedAmulet != null)
+                    {
                         _hero.Backpack.Add(_hero.EquippedAmulet);
+                    }
                     _hero.EquippedAmulet = amulet;
                 }
                 else if (item is Ring ring)
                 {
                     if (_hero.EquippedRing != null)
+                    {
                         _hero.Backpack.Add(_hero.EquippedRing);
+                    }
                     _hero.EquippedRing = ring;
                 }
 
@@ -248,17 +279,29 @@ namespace HeroSimulator.Core.Services
             }
 
             if (_hero.EquippedWeapon == item)
+            {
                 _hero.EquippedWeapon = null;
+            }
             else if (_hero.EquippedArmor == item)
+            {
                 _hero.EquippedArmor = null;
+            }
             else if (_hero.EquippedPants == item)
+            {
                 _hero.EquippedPants = null;
+            }
             else if (_hero.EquippedBoots == item)
+            {
                 _hero.EquippedBoots = null;
+            }
             else if (_hero.EquippedAmulet == item)
+            {
                 _hero.EquippedAmulet = null;
+            }
             else if (_hero.EquippedRing == item)
+            {
                 _hero.EquippedRing = null;
+            }
 
             _hero.Backpack.Add(item);
             OnLogMessage?.Invoke($"Zdjete: {item.Name}.");
