@@ -1,0 +1,158 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="HeroSimulator.Core.Exceptions.InventoryFullException" Collapsed="true">
+    <Position X="12.25" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Exceptions\InventoryFullException.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HeroSimulator.Core.Exceptions.NotEnoughEnergyException" Collapsed="true">
+    <Position X="14" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Exceptions\NotEnoughEnergyException.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HeroSimulator.Core.Exceptions.NotEnoughGoldException" Collapsed="true">
+    <Position X="10.25" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Exceptions\NotEnoughGoldException.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HeroSimulator.Core.Models.Entities.Entity" Collapsed="true">
+    <Position X="4" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAABCAAAAAAAAAAogAAAQAAABAAAABAAAAAAAAACA=</HashCode>
+      <FileName>Models\Entities\Entity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HeroSimulator.Core.Models.Entities.Hero" Collapsed="true">
+    <Position X="4" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAgAABAAAAwAEAAAAABAAAAAAACiABAAARQk=</HashCode>
+      <FileName>Models\Entities\Hero.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HeroSimulator.Core.Models.Entities.Mage" Collapsed="true">
+    <Position X="4" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQA=</HashCode>
+      <FileName>Models\Entities\Mage.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HeroSimulator.Core.Models.Entities.Scout" Collapsed="true">
+    <Position X="6.25" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQA=</HashCode>
+      <FileName>Models\Entities\Scout.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HeroSimulator.Core.Models.Entities.Warrior" Collapsed="true">
+    <Position X="1.75" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQA=</HashCode>
+      <FileName>Models\Entities\Warrior.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HeroSimulator.Core.Models.Items.Amulet" Collapsed="true">
+    <Position X="2" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Items\Amulet.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HeroSimulator.Core.Models.Items.Armor" Collapsed="true">
+    <Position X="6.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Items\Armor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HeroSimulator.Core.Models.Items.Boots" Collapsed="true">
+    <Position X="11" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Items\Boots.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HeroSimulator.Core.Models.Items.Item" Collapsed="true">
+    <Position X="7.5" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAQEAAAgAAAAAAgQAABAAQAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Items\Item.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HeroSimulator.Core.Models.Items.Pants" Collapsed="true">
+    <Position X="4.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Items\Pants.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HeroSimulator.Core.Models.Items.Ring" Collapsed="true">
+    <Position X="8.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Items\Ring.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HeroSimulator.Core.Models.Items.Weapon" Collapsed="true">
+    <Position X="13.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAgAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Items\Weapon.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HeroSimulator.Core.Models.Quest" Collapsed="true">
+    <Position X="12.25" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAASAAAAAAAgAQAAAAAEAAAAAAAAAAEAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Quest.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HeroSimulator.Core.Services.GameService" Collapsed="true">
+    <Position X="10.25" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAAAACAmAACAAAAAAAAABAEBIEwAAAAAAQAAQABEAAE=</HashCode>
+      <FileName>Services\GameService.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HeroSimulator.Core.Services.SaveLoadService" Collapsed="true">
+    <Position X="14" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAQAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAE=</HashCode>
+      <FileName>Services\SaveLoadService.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Enum Name="HeroSimulator.Core.Enums.ItemRarity" Collapsed="true">
+    <Position X="10.25" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAEAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Enums\ItemRarity.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="HeroSimulator.Core.Enums.QuestDifficulty" Collapsed="true">
+    <Position X="12.25" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAAAAAAAAAAAAAIAAAAAAAAAAAgAAA=</HashCode>
+      <FileName>Enums\QuestDifficulty.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Delegate Name="HeroSimulator.Core.Delegates.GameStateChangedHandler" Collapsed="true">
+    <Position X="10.25" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Delegates\GameDelegates.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="HeroSimulator.Core.Delegates.LogMessageHandler" Collapsed="true">
+    <Position X="12.25" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Delegates\GameDelegates.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
