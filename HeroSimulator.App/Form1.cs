@@ -26,7 +26,11 @@ namespace HeroSimulator.App
                 try
                 {
                     var loadedHero = _saveLoadService.LoadGame(_saveFilePath);
-                    if (loadedHero != null) { InitializeGameService(loadedHero); return; }
+                    if (loadedHero != null)
+                    {
+                        InitializeGameService(loadedHero);
+                        return;
+                    }
                 }
                 catch (Exception) { }
             }
@@ -41,13 +45,18 @@ namespace HeroSimulator.App
                 {
                     InitializeGameService(creationForm.CreatedHero);
                 }
-                else Application.Exit();
+                else
+                    Application.Exit();
             }
         }
 
         private void InitializeGameService(Hero hero)
         {
-            if (_gameService != null) { _gameService.OnGameStateChanged -= UpdateUI; _gameService.OnLogMessage -= AddLog; }
+            if (_gameService != null)
+            {
+                _gameService.OnGameStateChanged -= UpdateUI;
+                _gameService.OnLogMessage -= AddLog;
+            }
             _gameService = new GameService(hero);
             _gameService.OnGameStateChanged += UpdateUI;
             _gameService.OnLogMessage += AddLog;
@@ -59,12 +68,17 @@ namespace HeroSimulator.App
 
         private string GetItemStatsInfo(Item item)
         {
-            if (item == null) return string.Empty;
+            if (item == null)
+                return string.Empty;
             var s = new List<string>();
-            if (item.BonusStrength > 0) s.Add($"+{item.BonusStrength} STR");
-            if (item.BonusDexterity > 0) s.Add($"+{item.BonusDexterity} DEX");
-            if (item.BonusIntelligence > 0) s.Add($"+{item.BonusIntelligence} INT");
-            if (item.BonusArmour > 0) s.Add($"+{item.BonusArmour} PANC");
+            if (item.BonusStrength > 0)
+                s.Add($"+{item.BonusStrength} STR");
+            if (item.BonusDexterity > 0)
+                s.Add($"+{item.BonusDexterity} DEX");
+            if (item.BonusIntelligence > 0)
+                s.Add($"+{item.BonusIntelligence} INT");
+            if (item.BonusArmour > 0)
+                s.Add($"+{item.BonusArmour} PANC");
             return string.Join(", ", s);
         }
 
@@ -77,7 +91,10 @@ namespace HeroSimulator.App
             var eq = new List<Item> { h.EquippedWeapon, h.EquippedArmor, h.EquippedPants, h.EquippedBoots, h.EquippedAmulet, h.EquippedRing };
             foreach (var i in eq.Where(x => x != null))
             {
-                bStr += i.BonusStrength; bDex += i.BonusDexterity; bInt += i.BonusIntelligence; bArm += i.BonusArmour;
+                bStr += i.BonusStrength;
+                bDex += i.BonusDexterity;
+                bInt += i.BonusIntelligence;
+                bArm += i.BonusArmour;
             }
 
             lblName.Text = $"[{className.ToUpper()}] {h.Name} | DMG: {h.CalculateDamage()} | Pancerz: {h.Armour + bArm}";
@@ -85,11 +102,14 @@ namespace HeroSimulator.App
             lblGold.Text = $"Zloto: {h.Gold}";
             lblDay.Text = $"Dzien: {h.CurrentDay}";
 
-            if (tabControl1.TabPages.Count >= 3) tabControl1.TabPages[2].Text = $"Sklep ({h.Gold}g)";
+            if (tabControl1.TabPages.Count >= 3)
+                tabControl1.TabPages[2].Text = $"Sklep ({h.Gold}g)";
 
-            pbHp.Maximum = h.MaxHp; pbHp.Value = Math.Min(h.CurrentHp, h.MaxHp);
+            pbHp.Maximum = h.MaxHp;
+            pbHp.Value = Math.Min(h.CurrentHp, h.MaxHp);
             lblEnergy.Text = $"Energia: {h.Energy}/{h.MaxEnergy}";
-            pbEnergy.Maximum = h.MaxEnergy; pbEnergy.Value = Math.Min(h.Energy, h.MaxEnergy);
+            pbEnergy.Maximum = h.MaxEnergy;
+            pbEnergy.Value = Math.Min(h.Energy, h.MaxEnergy);
 
             lblStr.Text = $"STR: {h.Strength + bStr} ({h.Strength}+{bStr}) " + (h is Warrior ? "[+2 DMG/pkt]" : "");
             lblDex.Text = $"DEX: {h.Dexterity + bDex} ({h.Dexterity}+{bDex}) " + (h is Scout ? "[+2 DMG/pkt]" : "");
@@ -133,16 +153,39 @@ namespace HeroSimulator.App
         {
             _currentShopItems = _gameService.GenerateShopItems(5);
             lbShop.Items.Clear();
-            foreach (var i in _currentShopItems) lbShop.Items.Add($"{i.Name} [{i.Rarity}] | {GetItemStatsInfo(i)} | Cena: {i.Price}g");
+            foreach (var i in _currentShopItems)
+                lbShop.Items.Add($"{i.Name} [{i.Rarity}] | {GetItemStatsInfo(i)} | Cena: {i.Price}g");
         }
 
-        private void btnBuyStr_Click(object sender, EventArgs e) { try { _gameService.UpgradeStrength(); } catch (Exception ex) { MessageBox.Show(ex.Message); } }
-        private void btnBuyDex_Click(object sender, EventArgs e) { try { _gameService.UpgradeDexterity(); } catch (Exception ex) { MessageBox.Show(ex.Message); } }
-        private void btnBuyInt_Click(object sender, EventArgs e) { try { _gameService.UpgradeIntelligence(); } catch (Exception ex) { MessageBox.Show(ex.Message); } }
+        private void btnBuyStr_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                _gameService.UpgradeStrength();
+            }
+            catch (Exception ex) { MessageBox.Show(ex.Message); }
+        }
+        private void btnBuyDex_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                _gameService.UpgradeDexterity();
+            }
+            catch (Exception ex) { MessageBox.Show(ex.Message); }
+        }
+        private void btnBuyInt_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                _gameService.UpgradeIntelligence();
+            }
+            catch (Exception ex) { MessageBox.Show(ex.Message); }
+        }
 
         private void btnSell_Click(object sender, EventArgs e)
         {
-            if (lbBackpack.SelectedIndex != -1) _gameService.SellItem(_gameService.GetHero().Backpack[lbBackpack.SelectedIndex]);
+            if (lbBackpack.SelectedIndex != -1)
+                _gameService.SellItem(_gameService.GetHero().Backpack[lbBackpack.SelectedIndex]);
         }
 
         private void btnEquip_Click(object sender, EventArgs e)
@@ -150,16 +193,23 @@ namespace HeroSimulator.App
             try
             {
                 var h = _gameService.GetHero();
-                if (lbBackpack.SelectedIndex != -1) _gameService.EquipItem(h.Backpack[lbBackpack.SelectedIndex]);
+                if (lbBackpack.SelectedIndex != -1)
+                    _gameService.EquipItem(h.Backpack[lbBackpack.SelectedIndex]);
                 else if (lbEquipped.SelectedIndex != -1)
                 {
                     int idx = lbEquipped.SelectedIndex;
-                    if (idx == 0 && h.EquippedWeapon != null) _gameService.UnequipItem(h.EquippedWeapon);
-                    else if (idx == 1 && h.EquippedArmor != null) _gameService.UnequipItem(h.EquippedArmor);
-                    else if (idx == 2 && h.EquippedPants != null) _gameService.UnequipItem(h.EquippedPants);
-                    else if (idx == 3 && h.EquippedBoots != null) _gameService.UnequipItem(h.EquippedBoots);
-                    else if (idx == 4 && h.EquippedAmulet != null) _gameService.UnequipItem(h.EquippedAmulet);
-                    else if (idx == 5 && h.EquippedRing != null) _gameService.UnequipItem(h.EquippedRing);
+                    if (idx == 0 && h.EquippedWeapon != null)
+                        _gameService.UnequipItem(h.EquippedWeapon);
+                    else if (idx == 1 && h.EquippedArmor != null)
+                        _gameService.UnequipItem(h.EquippedArmor);
+                    else if (idx == 2 && h.EquippedPants != null)
+                        _gameService.UnequipItem(h.EquippedPants);
+                    else if (idx == 3 && h.EquippedBoots != null)
+                        _gameService.UnequipItem(h.EquippedBoots);
+                    else if (idx == 4 && h.EquippedAmulet != null)
+                        _gameService.UnequipItem(h.EquippedAmulet);
+                    else if (idx == 5 && h.EquippedRing != null)
+                        _gameService.UnequipItem(h.EquippedRing);
                 }
             }
             catch (Exception ex) { MessageBox.Show(ex.Message); }
@@ -167,16 +217,27 @@ namespace HeroSimulator.App
 
         private void btnStartQuest_Click(object sender, EventArgs e)
         {
-            if (lbQuests.SelectedIndex == -1) return;
-            try { _gameService.StartQuest(_currentQuests[lbQuests.SelectedIndex]); RefreshTavern(); }
+            if (lbQuests.SelectedIndex == -1)
+                return;
+            try
+            {
+                _gameService.StartQuest(_currentQuests[lbQuests.SelectedIndex]);
+                RefreshTavern();
+            }
             catch (Exception ex) { MessageBox.Show(ex.Message); }
         }
 
-        private void btnEndDay_Click(object sender, EventArgs e) { _gameService.EndDay(); RefreshTavern(); RefreshShop(); }
+        private void btnEndDay_Click(object sender, EventArgs e)
+        {
+            _gameService.EndDay();
+            RefreshTavern();
+            RefreshShop();
+        }
 
         private void btnBuyItem_Click(object sender, EventArgs e)
         {
-            if (lbShop.SelectedIndex == -1) return;
+            if (lbShop.SelectedIndex == -1)
+                return;
             try
             {
                 var item = _currentShopItems[lbShop.SelectedIndex];
@@ -189,15 +250,21 @@ namespace HeroSimulator.App
 
         private void btnRestartGame_Click(object sender, EventArgs e)
         {
-            if (File.Exists(_saveFilePath)) File.Delete(_saveFilePath);
+            if (File.Exists(_saveFilePath))
+                File.Delete(_saveFilePath);
             Application.Restart();
         }
 
-        private void btnSaveGame_Click(object sender, EventArgs e) { _saveLoadService.SaveGame(_gameService.GetHero(), _saveFilePath); AddLog("Zapisano."); }
+        private void btnSaveGame_Click(object sender, EventArgs e)
+        {
+            _saveLoadService.SaveGame(_gameService.GetHero(), _saveFilePath);
+            AddLog("Zapisano.");
+        }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (_gameService != null) _saveLoadService.SaveGame(_gameService.GetHero(), _saveFilePath);
+            if (_gameService != null)
+                _saveLoadService.SaveGame(_gameService.GetHero(), _saveFilePath);
         }
     }
 }

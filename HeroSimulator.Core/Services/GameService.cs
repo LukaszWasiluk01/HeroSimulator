@@ -67,15 +67,28 @@ namespace HeroSimulator.Core.Services
                 switch (itemType)
                 {
                     case 0:
-                        if (_hero is Mage) item = new Weapon($"Kostur poziomu {_hero.Level}", rarity) { BonusIntelligence = statBonus, Price = price };
-                        else if (_hero is Scout) item = new Weapon($"Luk poziomu {_hero.Level}", rarity) { BonusDexterity = statBonus, Price = price };
-                        else item = new Weapon($"Miecz poziomu {_hero.Level}", rarity) { BonusStrength = statBonus, Price = price };
+                        if (_hero is Mage)
+                            item = new Weapon($"Kostur poziomu {_hero.Level}", rarity) { BonusIntelligence = statBonus, Price = price };
+                        else if (_hero is Scout)
+                            item = new Weapon($"Luk poziomu {_hero.Level}", rarity) { BonusDexterity = statBonus, Price = price };
+                        else
+                            item = new Weapon($"Miecz poziomu {_hero.Level}", rarity) { BonusStrength = statBonus, Price = price };
                         break;
-                    case 1: item = new Armor($"Zbroja poziomu {_hero.Level}", rarity) { BonusArmour = statBonus, Price = price }; break;
-                    case 2: item = new Pants($"Spodnie poziomu {_hero.Level}", rarity) { BonusArmour = statBonus / 2, BonusStrength = statBonus / 2, Price = price }; break;
-                    case 3: item = new Boots($"Buty poziomu {_hero.Level}", rarity) { BonusArmour = statBonus / 2, BonusDexterity = statBonus / 2, Price = price }; break;
-                    case 4: item = new Amulet($"Amulet poziomu {_hero.Level}", rarity) { BonusIntelligence = statBonus, Price = price }; break;
-                    default: item = new Ring($"Pierscien poziomu {_hero.Level}", rarity) { BonusStrength = statBonus / 2, BonusDexterity = statBonus / 2, Price = price }; break;
+                    case 1:
+                        item = new Armor($"Zbroja poziomu {_hero.Level}", rarity) { BonusArmour = statBonus, Price = price };
+                        break;
+                    case 2:
+                        item = new Pants($"Spodnie poziomu {_hero.Level}", rarity) { BonusArmour = statBonus / 2, BonusStrength = statBonus / 2, Price = price };
+                        break;
+                    case 3:
+                        item = new Boots($"Buty poziomu {_hero.Level}", rarity) { BonusArmour = statBonus / 2, BonusDexterity = statBonus / 2, Price = price };
+                        break;
+                    case 4:
+                        item = new Amulet($"Amulet poziomu {_hero.Level}", rarity) { BonusIntelligence = statBonus, Price = price };
+                        break;
+                    default:
+                        item = new Ring($"Pierscien poziomu {_hero.Level}", rarity) { BonusStrength = statBonus / 2, BonusDexterity = statBonus / 2, Price = price };
+                        break;
                 }
                 items.Add(item);
             }
@@ -84,7 +97,8 @@ namespace HeroSimulator.Core.Services
 
         public void StartQuest(Quest quest)
         {
-            if (_hero.Energy < quest.EnergyCost) throw new NotEnoughEnergyException("Brak energii.");
+            if (_hero.Energy < quest.EnergyCost)
+                throw new NotEnoughEnergyException("Brak energii.");
             _hero.Energy -= quest.EnergyCost;
 
             var enemyStats = GetEnemyStats(quest.Difficulty);
@@ -93,18 +107,30 @@ namespace HeroSimulator.Core.Services
             int heroDamage = _hero.CalculateDamage();
 
             int totalArmour = _hero.Armour;
-            if (_hero.EquippedArmor != null) totalArmour += _hero.EquippedArmor.BonusArmour;
-            if (_hero.EquippedPants != null) totalArmour += _hero.EquippedPants.BonusArmour;
-            if (_hero.EquippedBoots != null) totalArmour += _hero.EquippedBoots.BonusArmour;
+            if (_hero.EquippedArmor != null)
+                totalArmour += _hero.EquippedArmor.BonusArmour;
+            if (_hero.EquippedPants != null)
+                totalArmour += _hero.EquippedPants.BonusArmour;
+            if (_hero.EquippedBoots != null)
+                totalArmour += _hero.EquippedBoots.BonusArmour;
 
             bool won = false;
             while (true)
             {
                 enemyHp -= Math.Max(1, heroDamage);
-                if (enemyHp <= 0) { won = true; break; }
+                if (enemyHp <= 0)
+                {
+                    won = true;
+                    break;
+                }
                 int actualDamage = enemyDamage - (totalArmour / 2);
                 _hero.CurrentHp -= Math.Max(1, actualDamage);
-                if (_hero.CurrentHp <= 0) { _hero.CurrentHp = 1; won = false; break; }
+                if (_hero.CurrentHp <= 0)
+                {
+                    _hero.CurrentHp = 1;
+                    won = false;
+                    break;
+                }
             }
 
             if (won)
@@ -112,17 +138,21 @@ namespace HeroSimulator.Core.Services
                 _hero.Gold += quest.GoldReward;
                 _hero.Experience += quest.ExperienceReward;
                 OnLogMessage?.Invoke($"Wygrana! {quest.Description}. Zdobyto {quest.GoldReward}g.");
-                if (_hero.Experience >= _hero.ExperienceToNextLevel) LevelUp();
+                if (_hero.Experience >= _hero.ExperienceToNextLevel)
+                    LevelUp();
             }
-            else OnLogMessage?.Invoke($"Porazka... Uciekasz z 1 HP.");
+            else
+                OnLogMessage?.Invoke($"Porazka... Uciekasz z 1 HP.");
 
             OnGameStateChanged?.Invoke();
         }
 
         public void BuyItem(Item item)
         {
-            if (_hero.Gold < item.Price) throw new NotEnoughGoldException("Brak zlota.");
-            if (_hero.Backpack.Count >= 10) throw new InventoryFullException("Plecak pelen.");
+            if (_hero.Gold < item.Price)
+                throw new NotEnoughGoldException("Brak zlota.");
+            if (_hero.Backpack.Count >= 10)
+                throw new InventoryFullException("Plecak pelen.");
             _hero.Gold -= item.Price;
             _hero.Backpack.Add(item);
             OnGameStateChanged?.Invoke();
@@ -144,12 +174,42 @@ namespace HeroSimulator.Core.Services
         {
             if (_hero.Backpack.Contains(item))
             {
-                if (item is Weapon weapon) { if (_hero.EquippedWeapon != null) _hero.Backpack.Add(_hero.EquippedWeapon); _hero.EquippedWeapon = weapon; }
-                else if (item is Armor armor) { if (_hero.EquippedArmor != null) _hero.Backpack.Add(_hero.EquippedArmor); _hero.EquippedArmor = armor; }
-                else if (item is Pants pants) { if (_hero.EquippedPants != null) _hero.Backpack.Add(_hero.EquippedPants); _hero.EquippedPants = pants; }
-                else if (item is Boots boots) { if (_hero.EquippedBoots != null) _hero.Backpack.Add(_hero.EquippedBoots); _hero.EquippedBoots = boots; }
-                else if (item is Amulet amulet) { if (_hero.EquippedAmulet != null) _hero.Backpack.Add(_hero.EquippedAmulet); _hero.EquippedAmulet = amulet; }
-                else if (item is Ring ring) { if (_hero.EquippedRing != null) _hero.Backpack.Add(_hero.EquippedRing); _hero.EquippedRing = ring; }
+                if (item is Weapon weapon)
+                {
+                    if (_hero.EquippedWeapon != null)
+                        _hero.Backpack.Add(_hero.EquippedWeapon);
+                    _hero.EquippedWeapon = weapon;
+                }
+                else if (item is Armor armor)
+                {
+                    if (_hero.EquippedArmor != null)
+                        _hero.Backpack.Add(_hero.EquippedArmor);
+                    _hero.EquippedArmor = armor;
+                }
+                else if (item is Pants pants)
+                {
+                    if (_hero.EquippedPants != null)
+                        _hero.Backpack.Add(_hero.EquippedPants);
+                    _hero.EquippedPants = pants;
+                }
+                else if (item is Boots boots)
+                {
+                    if (_hero.EquippedBoots != null)
+                        _hero.Backpack.Add(_hero.EquippedBoots);
+                    _hero.EquippedBoots = boots;
+                }
+                else if (item is Amulet amulet)
+                {
+                    if (_hero.EquippedAmulet != null)
+                        _hero.Backpack.Add(_hero.EquippedAmulet);
+                    _hero.EquippedAmulet = amulet;
+                }
+                else if (item is Ring ring)
+                {
+                    if (_hero.EquippedRing != null)
+                        _hero.Backpack.Add(_hero.EquippedRing);
+                    _hero.EquippedRing = ring;
+                }
                 _hero.Backpack.Remove(item);
                 OnGameStateChanged?.Invoke();
             }
@@ -157,13 +217,20 @@ namespace HeroSimulator.Core.Services
 
         public void UnequipItem(Item item)
         {
-            if (_hero.Backpack.Count >= 10) throw new InventoryFullException("Brak miejsca w plecaku.");
-            if (_hero.EquippedWeapon == item) _hero.EquippedWeapon = null;
-            else if (_hero.EquippedArmor == item) _hero.EquippedArmor = null;
-            else if (_hero.EquippedPants == item) _hero.EquippedPants = null;
-            else if (_hero.EquippedBoots == item) _hero.EquippedBoots = null;
-            else if (_hero.EquippedAmulet == item) _hero.EquippedAmulet = null;
-            else if (_hero.EquippedRing == item) _hero.EquippedRing = null;
+            if (_hero.Backpack.Count >= 10)
+                throw new InventoryFullException("Brak miejsca w plecaku.");
+            if (_hero.EquippedWeapon == item)
+                _hero.EquippedWeapon = null;
+            else if (_hero.EquippedArmor == item)
+                _hero.EquippedArmor = null;
+            else if (_hero.EquippedPants == item)
+                _hero.EquippedPants = null;
+            else if (_hero.EquippedBoots == item)
+                _hero.EquippedBoots = null;
+            else if (_hero.EquippedAmulet == item)
+                _hero.EquippedAmulet = null;
+            else if (_hero.EquippedRing == item)
+                _hero.EquippedRing = null;
             _hero.Backpack.Add(item);
             OnGameStateChanged?.Invoke();
         }
@@ -173,34 +240,48 @@ namespace HeroSimulator.Core.Services
         public void UpgradeStrength()
         {
             int cost = GetAttributeUpgradeCost(_hero.Strength);
-            if (_hero.Gold < cost) throw new NotEnoughGoldException("Brak zlota.");
-            _hero.Gold -= cost; _hero.Strength++; OnGameStateChanged?.Invoke();
+            if (_hero.Gold < cost)
+                throw new NotEnoughGoldException("Brak zlota.");
+            _hero.Gold -= cost;
+            _hero.Strength++;
+            OnGameStateChanged?.Invoke();
         }
 
         public void UpgradeDexterity()
         {
             int cost = GetAttributeUpgradeCost(_hero.Dexterity);
-            if (_hero.Gold < cost) throw new NotEnoughGoldException("Brak zlota.");
-            _hero.Gold -= cost; _hero.Dexterity++; OnGameStateChanged?.Invoke();
+            if (_hero.Gold < cost)
+                throw new NotEnoughGoldException("Brak zlota.");
+            _hero.Gold -= cost;
+            _hero.Dexterity++;
+            OnGameStateChanged?.Invoke();
         }
 
         public void UpgradeIntelligence()
         {
             int cost = GetAttributeUpgradeCost(_hero.Intelligence);
-            if (_hero.Gold < cost) throw new NotEnoughGoldException("Brak zlota.");
-            _hero.Gold -= cost; _hero.Intelligence++; OnGameStateChanged?.Invoke();
+            if (_hero.Gold < cost)
+                throw new NotEnoughGoldException("Brak zlota.");
+            _hero.Gold -= cost;
+            _hero.Intelligence++;
+            OnGameStateChanged?.Invoke();
         }
 
         public void EndDay()
         {
-            _hero.CurrentDay++; _hero.Energy = _hero.MaxEnergy; _hero.CurrentHp = _hero.MaxHp; OnGameStateChanged?.Invoke();
+            _hero.CurrentDay++;
+            _hero.Energy = _hero.MaxEnergy;
+            _hero.CurrentHp = _hero.MaxHp;
+            OnGameStateChanged?.Invoke();
         }
 
         private void LevelUp()
         {
-            _hero.Level++; _hero.Experience -= _hero.ExperienceToNextLevel;
+            _hero.Level++;
+            _hero.Experience -= _hero.ExperienceToNextLevel;
             _hero.ExperienceToNextLevel = (int)(_hero.ExperienceToNextLevel * 1.5);
-            _hero.MaxHp += 20; _hero.CurrentHp = _hero.MaxHp;
+            _hero.MaxHp += 20;
+            _hero.CurrentHp = _hero.MaxHp;
         }
     }
 }

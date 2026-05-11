@@ -4,7 +4,10 @@ namespace HeroSimulator.App
 {
     public partial class CharacterCreationForm : Form
     {
-        public Hero CreatedHero { get; private set; }
+        public Hero CreatedHero
+        {
+            get; private set;
+        }
 
         public CharacterCreationForm()
         {

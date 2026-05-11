@@ -13,8 +13,10 @@
         public override int CalculateDamage()
         {
             int equipmentBonus = 0;
-            if (EquippedWeapon != null) equipmentBonus += EquippedWeapon.BonusDexterity;
-            if (EquippedArmor != null) equipmentBonus += EquippedArmor.BonusDexterity;
+            if (EquippedWeapon != null)
+                equipmentBonus += EquippedWeapon.BonusDexterity;
+            if (EquippedArmor != null)
+                equipmentBonus += EquippedArmor.BonusDexterity;
             return (Dexterity + equipmentBonus) * 2;
         }
     }

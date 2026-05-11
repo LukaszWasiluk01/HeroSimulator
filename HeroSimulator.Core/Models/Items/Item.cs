@@ -11,14 +11,38 @@ namespace HeroSimulator.Core.Models.Items
     [JsonDerivedType(typeof(Ring), "Ring")]
     public abstract class Item
     {
-        public string Id { get; set; }
-        public string Name { get; set; }
-        public ItemRarity Rarity { get; set; }
-        public int BonusStrength { get; set; }
-        public int BonusDexterity { get; set; }
-        public int BonusIntelligence { get; set; }
-        public int BonusArmour { get; set; }
-        public int Price { get; set; }
+        public string Id
+        {
+            get; set;
+        }
+        public string Name
+        {
+            get; set;
+        }
+        public ItemRarity Rarity
+        {
+            get; set;
+        }
+        public int BonusStrength
+        {
+            get; set;
+        }
+        public int BonusDexterity
+        {
+            get; set;
+        }
+        public int BonusIntelligence
+        {
+            get; set;
+        }
+        public int BonusArmour
+        {
+            get; set;
+        }
+        public int Price
+        {
+            get; set;
+        }
 
         protected Item(string name, ItemRarity rarity)
         {
