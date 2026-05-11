@@ -1,6 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using HeroSimulator.Core.Models.Items;
 using System.Text.Json.Serialization;
-using HeroSimulator.Core.Models.Items;
 
 namespace HeroSimulator.Core.Models.Entities
 {
