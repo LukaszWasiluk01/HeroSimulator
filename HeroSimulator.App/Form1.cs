@@ -110,7 +110,7 @@ namespace HeroSimulator.App
             }
 
             lblName.Text = $"[{className.ToUpper()}] {h.Name} | DMG: {h.CalculateDamage()} | Pancerz: {h.Armour + bArm}";
-            lblLevel.Text = $"Poziom: {h.Level} | HP: {h.CurrentHp}/{h.MaxHp}";
+            lblLevel.Text = $"Poziom: {h.Level} | HP: {h.CurrentHp}/{h.MaxHp} | POTEGA: {h.CalculateTotalPower()}";
             lblGold.Text = $"Zloto: {h.Gold}";
             lblDay.Text = $"Dzien: {h.CurrentDay}";
 
