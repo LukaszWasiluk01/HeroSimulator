@@ -32,8 +32,11 @@ namespace HeroSimulator.App
                         return;
                     }
                 }
-                catch (Exception) { }
+                catch (Exception)
+                {
+                }
             }
+
             ShowCharacterCreation();
         }
 
@@ -44,9 +47,13 @@ namespace HeroSimulator.App
                 if (creationForm.ShowDialog() == DialogResult.OK)
                 {
                     InitializeGameService(creationForm.CreatedHero);
+                    _saveLoadService.SaveGame(_gameService.GetHero(), _saveFilePath);
+                    AddLog("Utworzono nowa postac.");
                 }
                 else
+                {
                     Application.Exit();
+                }
             }
         }
 
@@ -57,6 +64,7 @@ namespace HeroSimulator.App
                 _gameService.OnGameStateChanged -= UpdateUI;
                 _gameService.OnLogMessage -= AddLog;
             }
+
             _gameService = new GameService(hero);
             _gameService.OnGameStateChanged += UpdateUI;
             _gameService.OnLogMessage += AddLog;
@@ -69,7 +77,10 @@ namespace HeroSimulator.App
         private string GetItemStatsInfo(Item item)
         {
             if (item == null)
+            {
                 return string.Empty;
+            }
+
             var s = new List<string>();
             if (item.BonusStrength > 0)
                 s.Add($"+{item.BonusStrength} STR");
@@ -89,6 +100,7 @@ namespace HeroSimulator.App
 
             int bStr = 0, bDex = 0, bInt = 0, bArm = 0;
             var eq = new List<Item> { h.EquippedWeapon, h.EquippedArmor, h.EquippedPants, h.EquippedBoots, h.EquippedAmulet, h.EquippedRing };
+
             foreach (var i in eq.Where(x => x != null))
             {
                 bStr += i.BonusStrength;
@@ -103,7 +115,9 @@ namespace HeroSimulator.App
             lblDay.Text = $"Dzien: {h.CurrentDay}";
 
             if (tabControl1.TabPages.Count >= 3)
+            {
                 tabControl1.TabPages[2].Text = $"Sklep ({h.Gold}g)";
+            }
 
             pbHp.Maximum = h.MaxHp;
             pbHp.Value = Math.Min(h.CurrentHp, h.MaxHp);
@@ -121,7 +135,9 @@ namespace HeroSimulator.App
 
             lbBackpack.Items.Clear();
             foreach (var item in h.Backpack)
+            {
                 lbBackpack.Items.Add($"{item.Name} | {GetItemStatsInfo(item)} | Sprzedaj: {item.Price / 2}g");
+            }
 
             lbEquipped.Items.Clear();
             lbEquipped.Items.Add(h.EquippedWeapon != null ? $"[Bron] {h.EquippedWeapon.Name} ({GetItemStatsInfo(h.EquippedWeapon)})" : "[Bron] Puste");
@@ -154,7 +170,9 @@ namespace HeroSimulator.App
             _currentShopItems = _gameService.GenerateShopItems(5);
             lbShop.Items.Clear();
             foreach (var i in _currentShopItems)
+            {
                 lbShop.Items.Add($"{i.Name} [{i.Rarity}] | {GetItemStatsInfo(i)} | Cena: {i.Price}g");
+            }
         }
 
         private void btnBuyStr_Click(object sender, EventArgs e)
@@ -163,29 +181,42 @@ namespace HeroSimulator.App
             {
                 _gameService.UpgradeStrength();
             }
-            catch (Exception ex) { MessageBox.Show(ex.Message); }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
+
         private void btnBuyDex_Click(object sender, EventArgs e)
         {
             try
             {
                 _gameService.UpgradeDexterity();
             }
-            catch (Exception ex) { MessageBox.Show(ex.Message); }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
+
         private void btnBuyInt_Click(object sender, EventArgs e)
         {
             try
             {
                 _gameService.UpgradeIntelligence();
             }
-            catch (Exception ex) { MessageBox.Show(ex.Message); }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private void btnSell_Click(object sender, EventArgs e)
         {
             if (lbBackpack.SelectedIndex != -1)
+            {
                 _gameService.SellItem(_gameService.GetHero().Backpack[lbBackpack.SelectedIndex]);
+            }
         }
 
         private void btnEquip_Click(object sender, EventArgs e)
@@ -194,7 +225,9 @@ namespace HeroSimulator.App
             {
                 var h = _gameService.GetHero();
                 if (lbBackpack.SelectedIndex != -1)
+                {
                     _gameService.EquipItem(h.Backpack[lbBackpack.SelectedIndex]);
+                }
                 else if (lbEquipped.SelectedIndex != -1)
                 {
                     int idx = lbEquipped.SelectedIndex;
@@ -212,23 +245,33 @@ namespace HeroSimulator.App
                         _gameService.UnequipItem(h.EquippedRing);
                 }
             }
-            catch (Exception ex) { MessageBox.Show(ex.Message); }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private void btnStartQuest_Click(object sender, EventArgs e)
         {
             if (lbQuests.SelectedIndex == -1)
+            {
                 return;
+            }
+
             try
             {
                 _gameService.StartQuest(_currentQuests[lbQuests.SelectedIndex]);
                 RefreshTavern();
             }
-            catch (Exception ex) { MessageBox.Show(ex.Message); }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private void btnEndDay_Click(object sender, EventArgs e)
         {
+            lbLogs.Items.Clear();
             _gameService.EndDay();
             RefreshTavern();
             RefreshShop();
@@ -237,7 +280,10 @@ namespace HeroSimulator.App
         private void btnBuyItem_Click(object sender, EventArgs e)
         {
             if (lbShop.SelectedIndex == -1)
+            {
                 return;
+            }
+
             try
             {
                 var item = _currentShopItems[lbShop.SelectedIndex];
@@ -245,26 +291,33 @@ namespace HeroSimulator.App
                 _currentShopItems.RemoveAt(lbShop.SelectedIndex);
                 lbShop.Items.RemoveAt(lbShop.SelectedIndex);
             }
-            catch (Exception ex) { MessageBox.Show(ex.Message); }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private void btnRestartGame_Click(object sender, EventArgs e)
         {
             if (File.Exists(_saveFilePath))
+            {
                 File.Delete(_saveFilePath);
+            }
             Application.Restart();
         }
 
         private void btnSaveGame_Click(object sender, EventArgs e)
         {
             _saveLoadService.SaveGame(_gameService.GetHero(), _saveFilePath);
-            AddLog("Zapisano.");
+            AddLog("Zapisano gre.");
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (_gameService != null)
+            {
                 _saveLoadService.SaveGame(_gameService.GetHero(), _saveFilePath);
+            }
         }
     }
 }

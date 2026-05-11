@@ -68,11 +68,17 @@ namespace HeroSimulator.Core.Services
                 {
                     case 0:
                         if (_hero is Mage)
+                        {
                             item = new Weapon($"Kostur poziomu {_hero.Level}", rarity) { BonusIntelligence = statBonus, Price = price };
+                        }
                         else if (_hero is Scout)
+                        {
                             item = new Weapon($"Luk poziomu {_hero.Level}", rarity) { BonusDexterity = statBonus, Price = price };
+                        }
                         else
+                        {
                             item = new Weapon($"Miecz poziomu {_hero.Level}", rarity) { BonusStrength = statBonus, Price = price };
+                        }
                         break;
                     case 1:
                         item = new Armor($"Zbroja poziomu {_hero.Level}", rarity) { BonusArmour = statBonus, Price = price };
@@ -98,7 +104,10 @@ namespace HeroSimulator.Core.Services
         public void StartQuest(Quest quest)
         {
             if (_hero.Energy < quest.EnergyCost)
+            {
                 throw new NotEnoughEnergyException("Brak energii.");
+            }
+
             _hero.Energy -= quest.EnergyCost;
 
             var enemyStats = GetEnemyStats(quest.Difficulty);
@@ -123,8 +132,10 @@ namespace HeroSimulator.Core.Services
                     won = true;
                     break;
                 }
+
                 int actualDamage = enemyDamage - (totalArmour / 2);
                 _hero.CurrentHp -= Math.Max(1, actualDamage);
+
                 if (_hero.CurrentHp <= 0)
                 {
                     _hero.CurrentHp = 1;
@@ -138,11 +149,16 @@ namespace HeroSimulator.Core.Services
                 _hero.Gold += quest.GoldReward;
                 _hero.Experience += quest.ExperienceReward;
                 OnLogMessage?.Invoke($"Wygrana! {quest.Description}. Zdobyto {quest.GoldReward}g.");
+
                 if (_hero.Experience >= _hero.ExperienceToNextLevel)
+                {
                     LevelUp();
+                }
             }
             else
+            {
                 OnLogMessage?.Invoke($"Porazka... Uciekasz z 1 HP.");
+            }
 
             OnGameStateChanged?.Invoke();
         }
@@ -150,11 +166,18 @@ namespace HeroSimulator.Core.Services
         public void BuyItem(Item item)
         {
             if (_hero.Gold < item.Price)
+            {
                 throw new NotEnoughGoldException("Brak zlota.");
+            }
+
             if (_hero.Backpack.Count >= 10)
+            {
                 throw new InventoryFullException("Plecak pelen.");
+            }
+
             _hero.Gold -= item.Price;
             _hero.Backpack.Add(item);
+            OnLogMessage?.Invoke($"Kupiono przedmiot: {item.Name} za {item.Price}g.");
             OnGameStateChanged?.Invoke();
         }
 
@@ -210,7 +233,9 @@ namespace HeroSimulator.Core.Services
                         _hero.Backpack.Add(_hero.EquippedRing);
                     _hero.EquippedRing = ring;
                 }
+
                 _hero.Backpack.Remove(item);
+                OnLogMessage?.Invoke($"Zalozono przedmiot: {item.Name}.");
                 OnGameStateChanged?.Invoke();
             }
         }
@@ -218,7 +243,10 @@ namespace HeroSimulator.Core.Services
         public void UnequipItem(Item item)
         {
             if (_hero.Backpack.Count >= 10)
+            {
                 throw new InventoryFullException("Brak miejsca w plecaku.");
+            }
+
             if (_hero.EquippedWeapon == item)
                 _hero.EquippedWeapon = null;
             else if (_hero.EquippedArmor == item)
@@ -231,19 +259,28 @@ namespace HeroSimulator.Core.Services
                 _hero.EquippedAmulet = null;
             else if (_hero.EquippedRing == item)
                 _hero.EquippedRing = null;
+
             _hero.Backpack.Add(item);
+            OnLogMessage?.Invoke($"Zdjete: {item.Name}.");
             OnGameStateChanged?.Invoke();
         }
 
-        public int GetAttributeUpgradeCost(int currentValue) => 10 + (currentValue * 5);
+        public int GetAttributeUpgradeCost(int currentValue)
+        {
+            return 10 + (currentValue * 5);
+        }
 
         public void UpgradeStrength()
         {
             int cost = GetAttributeUpgradeCost(_hero.Strength);
             if (_hero.Gold < cost)
+            {
                 throw new NotEnoughGoldException("Brak zlota.");
+            }
+
             _hero.Gold -= cost;
             _hero.Strength++;
+            OnLogMessage?.Invoke($"Ulepszono Sile.");
             OnGameStateChanged?.Invoke();
         }
 
@@ -251,9 +288,13 @@ namespace HeroSimulator.Core.Services
         {
             int cost = GetAttributeUpgradeCost(_hero.Dexterity);
             if (_hero.Gold < cost)
+            {
                 throw new NotEnoughGoldException("Brak zlota.");
+            }
+
             _hero.Gold -= cost;
             _hero.Dexterity++;
+            OnLogMessage?.Invoke($"Ulepszono Zrecznosc.");
             OnGameStateChanged?.Invoke();
         }
 
@@ -261,9 +302,13 @@ namespace HeroSimulator.Core.Services
         {
             int cost = GetAttributeUpgradeCost(_hero.Intelligence);
             if (_hero.Gold < cost)
+            {
                 throw new NotEnoughGoldException("Brak zlota.");
+            }
+
             _hero.Gold -= cost;
             _hero.Intelligence++;
+            OnLogMessage?.Invoke($"Ulepszono Inteligencje.");
             OnGameStateChanged?.Invoke();
         }
 
@@ -272,6 +317,7 @@ namespace HeroSimulator.Core.Services
             _hero.CurrentDay++;
             _hero.Energy = _hero.MaxEnergy;
             _hero.CurrentHp = _hero.MaxHp;
+            OnLogMessage?.Invoke($"Rozpoczeto nowy dzien ({_hero.CurrentDay}). Zregenerowano sily.");
             OnGameStateChanged?.Invoke();
         }
 
@@ -282,6 +328,7 @@ namespace HeroSimulator.Core.Services
             _hero.ExperienceToNextLevel = (int)(_hero.ExperienceToNextLevel * 1.5);
             _hero.MaxHp += 20;
             _hero.CurrentHp = _hero.MaxHp;
+            OnLogMessage?.Invoke($"Awans na {_hero.Level} poziom! Odnowiono maksymalne zdrowie.");
         }
     }
 }
