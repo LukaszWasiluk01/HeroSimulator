@@ -1,6 +1,6 @@
-﻿using HeroSimulator.Core.Models.Items;
+﻿using HeroSimulator.Core.Enums;
+using HeroSimulator.Core.Models.Items;
 using System.Text.Json.Serialization;
-using HeroSimulator.Core.Enums;
 
 namespace HeroSimulator.Core.Models.Entities
 {
