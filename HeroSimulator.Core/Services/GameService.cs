@@ -273,6 +273,20 @@ namespace HeroSimulator.Core.Services
             OnGameStateChanged?.Invoke();
         }
 
+        public void UpgradeLuck()
+        {
+            int cost = GetAttributeUpgradeCost(_hero.Luck);
+            if (_hero.Gold < cost)
+            {
+                throw new NotEnoughGoldException("Brak zlota.");
+            }
+
+            _hero.Gold -= cost;
+            _hero.Luck++;
+            OnLogMessage?.Invoke($"Ulepszono Szczescie.");
+            OnGameStateChanged?.Invoke();
+        }
+
         public void EndDay()
         {
             _hero.CurrentDay++;

@@ -30,6 +30,7 @@
         {
             tabControl1 = new TabControl();
             tabPage1 = new TabPage();
+            btnSell = new Button();
             btnBuyInt = new Button();
             btnBuyDex = new Button();
             btnBuyStr = new Button();
@@ -65,7 +66,8 @@
             btnRestartGame = new ToolStripMenuItem();
             btnSaveGame = new ToolStripMenuItem();
             menuStrip1 = new MenuStrip();
-            btnSell = new Button();
+            lblLuck = new Label();
+            btnBuyLuck = new Button();
             tabControl1.SuspendLayout();
             tabPage1.SuspendLayout();
             tabPage2.SuspendLayout();
@@ -86,6 +88,8 @@
             // 
             // tabPage1
             // 
+            tabPage1.Controls.Add(btnBuyLuck);
+            tabPage1.Controls.Add(lblLuck);
             tabPage1.Controls.Add(btnSell);
             tabPage1.Controls.Add(btnBuyInt);
             tabPage1.Controls.Add(btnBuyDex);
@@ -112,6 +116,16 @@
             tabPage1.TabIndex = 0;
             tabPage1.Text = "Postać";
             tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // btnSell
+            // 
+            btnSell.Location = new Point(256, 166);
+            btnSell.Name = "btnSell";
+            btnSell.Size = new Size(126, 23);
+            btnSell.TabIndex = 19;
+            btnSell.Text = "Sprzedaj (50% ceny)";
+            btnSell.UseVisualStyleBackColor = true;
+            btnSell.Click += btnSell_Click;
             // 
             // btnBuyInt
             // 
@@ -448,14 +462,14 @@
             // btnRestartGame
             // 
             btnRestartGame.Name = "btnRestartGame";
-            btnRestartGame.Size = new Size(180, 22);
+            btnRestartGame.Size = new Size(160, 22);
             btnRestartGame.Text = "Zacznij od nowa";
             btnRestartGame.Click += btnRestartGame_Click;
             // 
             // btnSaveGame
             // 
             btnSaveGame.Name = "btnSaveGame";
-            btnSaveGame.Size = new Size(180, 22);
+            btnSaveGame.Size = new Size(160, 22);
             btnSaveGame.Text = "Zapisz grę";
             btnSaveGame.Click += btnSaveGame_Click;
             // 
@@ -468,15 +482,26 @@
             menuStrip1.TabIndex = 0;
             menuStrip1.Text = "menuStrip1";
             // 
-            // btnSell
+            // lblLuck
             // 
-            btnSell.Location = new Point(256, 166);
-            btnSell.Name = "btnSell";
-            btnSell.Size = new Size(126, 23);
-            btnSell.TabIndex = 19;
-            btnSell.Text = "Sprzedaj (50% ceny)";
-            btnSell.UseVisualStyleBackColor = true;
-            btnSell.Click += btnSell_Click;
+            lblLuck.AutoSize = true;
+            lblLuck.Font = new Font("Segoe UI", 12F);
+            lblLuck.Location = new Point(388, 134);
+            lblLuck.Name = "lblLuck";
+            lblLuck.Padding = new Padding(0, 0, 0, 10);
+            lblLuck.Size = new Size(51, 31);
+            lblLuck.TabIndex = 20;
+            lblLuck.Text = "LUCK:";
+            // 
+            // btnBuyLuck
+            // 
+            btnBuyLuck.Location = new Point(667, 135);
+            btnBuyLuck.Name = "btnBuyLuck";
+            btnBuyLuck.Size = new Size(87, 23);
+            btnBuyLuck.TabIndex = 21;
+            btnBuyLuck.Text = "+1 (Koszt: 10)";
+            btnBuyLuck.UseVisualStyleBackColor = true;
+            btnBuyLuck.Click += btnBuyLuck_Click;
             // 
             // Form1
             // 
@@ -541,5 +566,7 @@
         private ToolStripMenuItem btnSaveGame;
         private MenuStrip menuStrip1;
         private Button btnSell;
+        private Button btnBuyLuck;
+        private Label lblLuck;
     }
 }

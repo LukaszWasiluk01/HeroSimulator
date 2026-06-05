@@ -142,10 +142,12 @@ namespace HeroSimulator.App
             lblStr.Text = $"STR: {h.Strength + bStr} ({h.Strength}+{bStr}) " + (h is Warrior ? "[+2 DMG/pkt]" : "");
             lblDex.Text = $"DEX: {h.Dexterity + bDex} ({h.Dexterity}+{bDex}) " + (h is Scout ? "[+2 DMG/pkt]" : "");
             lblInt.Text = $"INT: {h.Intelligence + bInt} ({h.Intelligence}+{bInt}) " + (h is Mage ? "[+3 DMG/pkt]" : "");
+            lblLuck.Text = $"LUCK: {h.Luck} ({h.Luck}+0) [Szansa na kryt.]";
 
             btnBuyStr.Text = $"+1 ({_gameService.GetAttributeUpgradeCost(h.Strength)}g)";
             btnBuyDex.Text = $"+1 ({_gameService.GetAttributeUpgradeCost(h.Dexterity)}g)";
             btnBuyInt.Text = $"+1 ({_gameService.GetAttributeUpgradeCost(h.Intelligence)}g)";
+            btnBuyLuck.Text = $"+1 ({_gameService.GetAttributeUpgradeCost(h.Luck)}g)";
 
             lbBackpack.Items.Clear();
             foreach (var item in h.Backpack)
@@ -224,6 +226,18 @@ namespace HeroSimulator.App
             try
             {
                 _gameService.UpgradeIntelligence();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void btnBuyLuck_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                _gameService.UpgradeLuck();
             }
             catch (Exception ex)
             {

@@ -34,6 +34,10 @@
         {
             get; set;
         }
+        public int Luck
+        {
+            get; set;
+        }
 
         protected Entity(string name, int level)
         {
@@ -43,7 +47,7 @@
 
         public virtual int CalculateTotalPower()
         {
-            return Strength + Dexterity + Intelligence + Armour + MaxHp;
+            return Strength + Dexterity + Intelligence + Armour + Luck;
         }
     }
 }

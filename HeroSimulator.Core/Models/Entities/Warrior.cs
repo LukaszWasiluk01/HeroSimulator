@@ -8,6 +8,7 @@
             Dexterity = 5;
             Intelligence = 2;
             Armour = 5;
+            Luck = 5;
         }
 
         public override int CalculateDamage()
