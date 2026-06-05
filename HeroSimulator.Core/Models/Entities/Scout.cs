@@ -14,29 +14,9 @@
         {
             int equipmentBonus = 0;
 
-            if (EquippedWeapon != null)
+            foreach (var item in Equipment.Values)
             {
-                equipmentBonus += EquippedWeapon.BonusDexterity;
-            }
-            if (EquippedArmor != null)
-            {
-                equipmentBonus += EquippedArmor.BonusDexterity;
-            }
-            if (EquippedPants != null)
-            {
-                equipmentBonus += EquippedPants.BonusDexterity;
-            }
-            if (EquippedBoots != null)
-            {
-                equipmentBonus += EquippedBoots.BonusDexterity;
-            }
-            if (EquippedAmulet != null)
-            {
-                equipmentBonus += EquippedAmulet.BonusDexterity;
-            }
-            if (EquippedRing != null)
-            {
-                equipmentBonus += EquippedRing.BonusDexterity;
+                equipmentBonus += item.BonusDexterity;
             }
 
             return (Dexterity + equipmentBonus) * 2;

@@ -4,6 +4,8 @@ namespace HeroSimulator.Core.Models.Items
 {
     public class Ring : Item
     {
-        public Ring(string name, ItemRarity rarity) : base(name, rarity) { }
+        public Ring(string name, ItemRarity rarity) : base(name, rarity, ItemSlot.Ring)
+        {
+        }
     }
 }

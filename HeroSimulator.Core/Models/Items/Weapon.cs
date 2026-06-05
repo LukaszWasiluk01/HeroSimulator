@@ -13,7 +13,7 @@ namespace HeroSimulator.Core.Models.Items
             get; set;
         }
 
-        public Weapon(string name, ItemRarity rarity) : base(name, rarity)
+        public Weapon(string name, ItemRarity rarity) : base(name, rarity, ItemSlot.Weapon)
         {
         }
     }

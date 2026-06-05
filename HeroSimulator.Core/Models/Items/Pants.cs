@@ -4,6 +4,8 @@ namespace HeroSimulator.Core.Models.Items
 {
     public class Pants : Item
     {
-        public Pants(string name, ItemRarity rarity) : base(name, rarity) { }
+        public Pants(string name, ItemRarity rarity) : base(name, rarity, ItemSlot.Pants)
+        {
+        }
     }
 }

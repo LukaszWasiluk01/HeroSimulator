@@ -1,3 +1,4 @@
+using HeroSimulator.Core.Enums;
 using HeroSimulator.Core.Models;
 using HeroSimulator.Core.Models.Entities;
 using HeroSimulator.Core.Models.Items;
@@ -93,15 +94,28 @@ namespace HeroSimulator.App
             return string.Join(", ", s);
         }
 
+        private string GetSlotPolishName(ItemSlot slot)
+        {
+            return slot switch
+            {
+                ItemSlot.Weapon => "Bron",
+                ItemSlot.Armor => "Zbroja",
+                ItemSlot.Pants => "Spodnie",
+                ItemSlot.Boots => "Buty",
+                ItemSlot.Amulet => "Amulet",
+                ItemSlot.Ring => "Pierscien",
+                _ => slot.ToString()
+            };
+        }
+
         private void UpdateUI()
         {
             var h = _gameService.GetHero();
             string className = h is Warrior ? "Wojownik" : h is Mage ? "Mag" : "Zwiadowca";
 
             int bStr = 0, bDex = 0, bInt = 0, bArm = 0;
-            var eq = new List<Item> { h.EquippedWeapon, h.EquippedArmor, h.EquippedPants, h.EquippedBoots, h.EquippedAmulet, h.EquippedRing };
 
-            foreach (var i in eq.Where(x => x != null))
+            foreach (var i in h.Equipment.Values)
             {
                 bStr += i.BonusStrength;
                 bDex += i.BonusDexterity;
@@ -140,12 +154,18 @@ namespace HeroSimulator.App
             }
 
             lbEquipped.Items.Clear();
-            lbEquipped.Items.Add(h.EquippedWeapon != null ? $"[Bron] {h.EquippedWeapon.Name} ({GetItemStatsInfo(h.EquippedWeapon)})" : "[Bron] Puste");
-            lbEquipped.Items.Add(h.EquippedArmor != null ? $"[Zbroja] {h.EquippedArmor.Name} ({GetItemStatsInfo(h.EquippedArmor)})" : "[Zbroja] Puste");
-            lbEquipped.Items.Add(h.EquippedPants != null ? $"[Spodnie] {h.EquippedPants.Name} ({GetItemStatsInfo(h.EquippedPants)})" : "[Spodnie] Puste");
-            lbEquipped.Items.Add(h.EquippedBoots != null ? $"[Buty] {h.EquippedBoots.Name} ({GetItemStatsInfo(h.EquippedBoots)})" : "[Buty] Puste");
-            lbEquipped.Items.Add(h.EquippedAmulet != null ? $"[Amulet] {h.EquippedAmulet.Name} ({GetItemStatsInfo(h.EquippedAmulet)})" : "[Amulet] Puste");
-            lbEquipped.Items.Add(h.EquippedRing != null ? $"[Pierscien] {h.EquippedRing.Name} ({GetItemStatsInfo(h.EquippedRing)})" : "[Pierscien] Puste");
+            foreach (ItemSlot slot in Enum.GetValues(typeof(ItemSlot)))
+            {
+                string slotName = GetSlotPolishName(slot);
+                if (h.Equipment.TryGetValue(slot, out Item equippedItem))
+                {
+                    lbEquipped.Items.Add($"[{slotName}] {equippedItem.Name} ({GetItemStatsInfo(equippedItem)})");
+                }
+                else
+                {
+                    lbEquipped.Items.Add($"[{slotName}] Puste");
+                }
+            }
         }
 
         private void AddLog(string message)
@@ -230,19 +250,11 @@ namespace HeroSimulator.App
                 }
                 else if (lbEquipped.SelectedIndex != -1)
                 {
-                    int idx = lbEquipped.SelectedIndex;
-                    if (idx == 0 && h.EquippedWeapon != null)
-                        _gameService.UnequipItem(h.EquippedWeapon);
-                    else if (idx == 1 && h.EquippedArmor != null)
-                        _gameService.UnequipItem(h.EquippedArmor);
-                    else if (idx == 2 && h.EquippedPants != null)
-                        _gameService.UnequipItem(h.EquippedPants);
-                    else if (idx == 3 && h.EquippedBoots != null)
-                        _gameService.UnequipItem(h.EquippedBoots);
-                    else if (idx == 4 && h.EquippedAmulet != null)
-                        _gameService.UnequipItem(h.EquippedAmulet);
-                    else if (idx == 5 && h.EquippedRing != null)
-                        _gameService.UnequipItem(h.EquippedRing);
+                    ItemSlot selectedSlot = (ItemSlot)lbEquipped.SelectedIndex;
+                    if (h.Equipment.TryGetValue(selectedSlot, out Item itemToUnequip))
+                    {
+                        _gameService.UnequipItem(itemToUnequip);
+                    }
                 }
             }
             catch (Exception ex)

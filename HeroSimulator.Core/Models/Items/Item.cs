@@ -43,12 +43,17 @@ namespace HeroSimulator.Core.Models.Items
         {
             get; set;
         }
+        public ItemSlot Slot
+        {
+            get; set;
+        }
 
-        protected Item(string name, ItemRarity rarity)
+        protected Item(string name, ItemRarity rarity, ItemSlot slot)
         {
             Id = Guid.NewGuid().ToString();
             Name = name;
             Rarity = rarity;
+            Slot = slot;
         }
     }
 }
