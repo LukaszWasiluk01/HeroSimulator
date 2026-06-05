@@ -91,6 +91,8 @@ namespace HeroSimulator.App
                 s.Add($"+{item.BonusIntelligence} INT");
             if (item.BonusArmour > 0)
                 s.Add($"+{item.BonusArmour} PANC");
+            if (item.BonusLuck > 0)
+                s.Add($"+{item.BonusLuck} LUCK");
             return string.Join(", ", s);
         }
 
@@ -113,7 +115,7 @@ namespace HeroSimulator.App
             var h = _gameService.GetHero();
             string className = h is Warrior ? "Wojownik" : h is Mage ? "Mag" : "Zwiadowca";
 
-            int bStr = 0, bDex = 0, bInt = 0, bArm = 0;
+            int bStr = 0, bDex = 0, bInt = 0, bArm = 0, bLuck = 0;
 
             foreach (var i in h.Equipment.Values)
             {
@@ -121,6 +123,7 @@ namespace HeroSimulator.App
                 bDex += i.BonusDexterity;
                 bInt += i.BonusIntelligence;
                 bArm += i.BonusArmour;
+                bLuck += i.BonusLuck;
             }
 
             lblName.Text = $"[{className.ToUpper()}] {h.Name} | DMG: {h.CalculateDamage()} | Pancerz: {h.Armour + bArm}";
@@ -142,7 +145,7 @@ namespace HeroSimulator.App
             lblStr.Text = $"STR: {h.Strength + bStr} ({h.Strength}+{bStr}) " + (h is Warrior ? "[+2 DMG/pkt]" : "");
             lblDex.Text = $"DEX: {h.Dexterity + bDex} ({h.Dexterity}+{bDex}) " + (h is Scout ? "[+2 DMG/pkt]" : "");
             lblInt.Text = $"INT: {h.Intelligence + bInt} ({h.Intelligence}+{bInt}) " + (h is Mage ? "[+3 DMG/pkt]" : "");
-            lblLuck.Text = $"LUCK: {h.Luck} ({h.Luck}+0) [Szansa na kryt.]";
+            lblLuck.Text = $"LUCK: {h.Luck + bLuck} ({h.Luck}+{bLuck}) [Szansa na kryt.]";
 
             btnBuyStr.Text = $"+1 ({_gameService.GetAttributeUpgradeCost(h.Strength)}g)";
             btnBuyDex.Text = $"+1 ({_gameService.GetAttributeUpgradeCost(h.Dexterity)}g)";
@@ -286,7 +289,15 @@ namespace HeroSimulator.App
 
             try
             {
-                _gameService.StartQuest(_currentQuests[lbQuests.SelectedIndex]);
+                var quest = _currentQuests[lbQuests.SelectedIndex];
+
+                _gameService.PayEnergyForQuest(quest);
+
+                using (var combatForm = new CombatForm(_gameService, quest))
+                {
+                    combatForm.ShowDialog();
+                }
+
                 RefreshTavern();
             }
             catch (Exception ex)

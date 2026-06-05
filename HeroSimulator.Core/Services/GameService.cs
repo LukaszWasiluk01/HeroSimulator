@@ -90,10 +90,10 @@ namespace HeroSimulator.Core.Services
                         item = new Boots($"Buty poziomu {_hero.Level}", rarity) { BonusArmour = statBonus / 2, BonusDexterity = statBonus / 2, Price = price };
                         break;
                     case 4:
-                        item = new Amulet($"Amulet poziomu {_hero.Level}", rarity) { BonusIntelligence = statBonus, Price = price };
+                        item = new Amulet($"Amulet poziomu {_hero.Level}", rarity) { BonusIntelligence = statBonus, BonusLuck = statBonus / 2, Price = price + (statBonus * 5) };
                         break;
                     default:
-                        item = new Ring($"Pierscien poziomu {_hero.Level}", rarity) { BonusStrength = statBonus / 2, BonusDexterity = statBonus / 2, Price = price };
+                        item = new Ring($"Pierscien poziomu {_hero.Level}", rarity) { BonusStrength = statBonus / 2, BonusDexterity = statBonus / 2, BonusLuck = statBonus / 2, Price = price + (statBonus * 5) };
                         break;
                 }
                 items.Add(item);
@@ -101,7 +101,7 @@ namespace HeroSimulator.Core.Services
             return items;
         }
 
-        public void StartQuest(Quest quest)
+        public void PayEnergyForQuest(Quest quest)
         {
             if (_hero.Energy < quest.EnergyCost)
             {
@@ -109,39 +109,62 @@ namespace HeroSimulator.Core.Services
             }
 
             _hero.Energy -= quest.EnergyCost;
+            OnGameStateChanged?.Invoke();
+        }
 
-            var enemyStats = GetEnemyStats(quest.Difficulty);
-            int enemyHp = enemyStats.Hp;
-            int enemyDamage = enemyStats.Damage;
-            int heroDamage = _hero.CalculateDamage();
+        public CombatTurnResult ExecuteCombatTurn(int currentHeroHp, int currentEnemyHp, int enemyDamage, bool isPerfectHit)
+        {
+            int baseDamage = _hero.CalculateDamage();
+            double randomVariance = _random.Next(80, 121) / 100.0;
+            int randomizedDamage = (int)(baseDamage * randomVariance);
+
+            if (isPerfectHit)
+            {
+                randomizedDamage = (int)(randomizedDamage * 1.5);
+            }
+
+            bool isCrit = false;
+            int totalLuck = _hero.Luck;
+            foreach (var item in _hero.Equipment.Values)
+            {
+                totalLuck += item.BonusLuck;
+            }
+
+            int critChance = totalLuck * 2;
+            if (_random.Next(1, 101) <= critChance)
+            {
+                randomizedDamage *= 2;
+                isCrit = true;
+            }
+
+            int finalEnemyHp = Math.Max(0, currentEnemyHp - Math.Max(1, randomizedDamage));
 
             int totalArmour = _hero.Armour;
-
             foreach (var item in _hero.Equipment.Values)
             {
                 totalArmour += item.BonusArmour;
             }
 
-            bool won = false;
-            while (true)
+            double enemyVariance = _random.Next(80, 121) / 100.0;
+            int randomizedEnemyDamage = (int)(enemyDamage * enemyVariance);
+            int finalEnemyDamage = Math.Max(1, randomizedEnemyDamage - (totalArmour / 2));
+
+            int finalHeroHp = Math.Max(0, currentHeroHp - finalEnemyDamage);
+
+            return new CombatTurnResult
             {
-                enemyHp -= Math.Max(1, heroDamage);
-                if (enemyHp <= 0)
-                {
-                    won = true;
-                    break;
-                }
+                HeroDamageDealt = randomizedDamage,
+                EnemyDamageDealt = finalEnemyDamage,
+                IsCriticalHit = isCrit,
+                IsPerfectHit = isPerfectHit,
+                HeroRemainingHp = finalHeroHp,
+                EnemyRemainingHp = finalEnemyHp
+            };
+        }
 
-                int actualDamage = enemyDamage - (totalArmour / 2);
-                _hero.CurrentHp -= Math.Max(1, actualDamage);
-
-                if (_hero.CurrentHp <= 0)
-                {
-                    _hero.CurrentHp = 1;
-                    won = false;
-                    break;
-                }
-            }
+        public void ResolveCombat(Quest quest, bool won, int remainingHp)
+        {
+            _hero.CurrentHp = Math.Max(1, remainingHp);
 
             if (won)
             {
@@ -156,7 +179,7 @@ namespace HeroSimulator.Core.Services
             }
             else
             {
-                OnLogMessage?.Invoke($"Porazka... Uciekasz z 1 HP.");
+                OnLogMessage?.Invoke($"Porazka... Uciekasz z {remainingHp} HP z misji: {quest.Description}.");
             }
 
             OnGameStateChanged?.Invoke();

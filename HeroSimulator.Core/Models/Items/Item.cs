@@ -39,6 +39,10 @@ namespace HeroSimulator.Core.Models.Items
         {
             get; set;
         }
+        public int BonusLuck
+        {
+            get; set;
+        }
         public int Price
         {
             get; set;
