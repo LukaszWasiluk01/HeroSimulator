@@ -51,6 +51,86 @@ namespace HeroSimulator.Core.Models.Entities
             get; set;
         }
 
+        [JsonIgnore]
+        public int TotalStrength
+        {
+            get
+            {
+                int total = Strength;
+                foreach (var item in Equipment.Values)
+                {
+                    total += item.BonusStrength;
+                    foreach (var gem in item.SocketedGems)
+                        total += gem.BonusStrength;
+                }
+                return total;
+            }
+        }
+
+        [JsonIgnore]
+        public int TotalDexterity
+        {
+            get
+            {
+                int total = Dexterity;
+                foreach (var item in Equipment.Values)
+                {
+                    total += item.BonusDexterity;
+                    foreach (var gem in item.SocketedGems)
+                        total += gem.BonusDexterity;
+                }
+                return total;
+            }
+        }
+
+        [JsonIgnore]
+        public int TotalIntelligence
+        {
+            get
+            {
+                int total = Intelligence;
+                foreach (var item in Equipment.Values)
+                {
+                    total += item.BonusIntelligence;
+                    foreach (var gem in item.SocketedGems)
+                        total += gem.BonusIntelligence;
+                }
+                return total;
+            }
+        }
+
+        [JsonIgnore]
+        public int TotalArmour
+        {
+            get
+            {
+                int total = Armour;
+                foreach (var item in Equipment.Values)
+                {
+                    total += item.BonusArmour;
+                    foreach (var gem in item.SocketedGems)
+                        total += gem.BonusArmour;
+                }
+                return total;
+            }
+        }
+
+        [JsonIgnore]
+        public int TotalLuck
+        {
+            get
+            {
+                int total = Luck;
+                foreach (var item in Equipment.Values)
+                {
+                    total += item.BonusLuck;
+                    foreach (var gem in item.SocketedGems)
+                        total += gem.BonusLuck;
+                }
+                return total;
+            }
+        }
+
         protected Hero(string name) : base(name, 1)
         {
             Gold = 0;
@@ -69,40 +149,12 @@ namespace HeroSimulator.Core.Models.Entities
 
         public override int CalculateTotalPower()
         {
-            int basePower = base.CalculateTotalPower();
-            int equipmentPower = 0;
-
-            foreach (var item in Equipment.Values)
-            {
-                equipmentPower += item.BonusStrength + item.BonusDexterity + item.BonusIntelligence + item.BonusArmour + item.BonusLuck;
-
-                foreach (var gem in item.SocketedGems)
-                {
-                    equipmentPower += gem.BonusStrength + gem.BonusDexterity + gem.BonusIntelligence + gem.BonusArmour + gem.BonusLuck;
-                }
-            }
-
-            return basePower + equipmentPower;
-        }
-
-        public int CalculateTotalLuck()
-        {
-            int totalLuck = Luck;
-            foreach (var item in Equipment.Values)
-            {
-                totalLuck += item.BonusLuck;
-
-                foreach (var gem in item.SocketedGems)
-                {
-                    totalLuck += gem.BonusLuck;
-                }
-            }
-            return totalLuck;
+            return TotalStrength + TotalDexterity + TotalIntelligence + TotalArmour + TotalLuck;
         }
 
         public int CalculateCriticalChance()
         {
-            return Math.Min(100, CalculateTotalLuck() * 2);
+            return Math.Min(100, TotalLuck * 2);
         }
 
         public abstract int CalculateDamage();

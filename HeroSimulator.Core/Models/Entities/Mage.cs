@@ -13,19 +13,7 @@
 
         public override int CalculateDamage()
         {
-            int equipmentBonus = 0;
-
-            foreach (var item in Equipment.Values)
-            {
-                equipmentBonus += item.BonusIntelligence;
-
-                foreach (var gem in item.SocketedGems)
-                {
-                    equipmentBonus += gem.BonusIntelligence;
-                }
-            }
-
-            return (Intelligence + equipmentBonus) * 3;
+            return TotalIntelligence * 3;
         }
     }
 }

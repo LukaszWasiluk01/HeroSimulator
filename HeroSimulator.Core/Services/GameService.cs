@@ -105,10 +105,7 @@ namespace HeroSimulator.Core.Services
                     else if (gemType == 2)
                         item.BonusIntelligence = statBonus;
                     else
-                    {
                         item.BonusLuck = statBonus;
-                        item.Price = price;
-                    }
                 }
                 else
                 {
@@ -218,17 +215,7 @@ namespace HeroSimulator.Core.Services
 
             int finalEnemyHp = Math.Max(0, currentEnemyHp - Math.Max(1, randomizedDamage));
 
-            int totalArmour = _hero.Armour;
-            foreach (var item in _hero.Equipment.Values)
-            {
-                totalArmour += item.BonusArmour;
-
-                foreach (var gem in item.SocketedGems)
-                {
-                    totalArmour += gem.BonusArmour;
-                }
-            }
-
+            int totalArmour = _hero.TotalArmour;
             double enemyVariance = _random.Next(80, 121) / 100.0;
             int randomizedEnemyDamage = (int)(enemyDamage * enemyVariance);
             int finalEnemyDamage = Math.Max(1, randomizedEnemyDamage - (totalArmour / 2));
@@ -538,9 +525,7 @@ namespace HeroSimulator.Core.Services
             else if (gemType == 2)
                 newGem.BonusIntelligence = statBonus;
             else
-            {
                 newGem.BonusLuck = statBonus;
-            }
 
             mine.StoredGems.Add(newGem);
         }
@@ -549,7 +534,17 @@ namespace HeroSimulator.Core.Services
         {
             _hero.Level++;
             _hero.Experience -= _hero.ExperienceToNextLevel;
-            _hero.ExperienceToNextLevel = (int)(_hero.ExperienceToNextLevel * 1.5);
+
+            long nextExp = (long)(_hero.ExperienceToNextLevel * 1.2);
+            if (nextExp > int.MaxValue)
+            {
+                _hero.ExperienceToNextLevel = int.MaxValue;
+            }
+            else
+            {
+                _hero.ExperienceToNextLevel = (int)nextExp;
+            }
+
             _hero.MaxHp += 20;
             _hero.CurrentHp = _hero.MaxHp;
             OnLogMessage?.Invoke($"Awans na {_hero.Level} poziom! Odnowiono maksymalne zdrowie.");

@@ -159,27 +159,12 @@ namespace HeroSimulator.App
             var h = _gameService.GetHero();
             string className = h is Warrior ? "Wojownik" : h is Mage ? "Mag" : "Zwiadowca";
 
-            int bStr = 0, bDex = 0, bInt = 0, bArm = 0, bLuck = 0;
+            int bonusStr = h.TotalStrength - h.Strength;
+            int bonusDex = h.TotalDexterity - h.Dexterity;
+            int bonusInt = h.TotalIntelligence - h.Intelligence;
+            int bonusLuck = h.TotalLuck - h.Luck;
 
-            foreach (var i in h.Equipment.Values)
-            {
-                bStr += i.BonusStrength;
-                bDex += i.BonusDexterity;
-                bInt += i.BonusIntelligence;
-                bArm += i.BonusArmour;
-                bLuck += i.BonusLuck;
-
-                foreach (var g in i.SocketedGems)
-                {
-                    bStr += g.BonusStrength;
-                    bDex += g.BonusDexterity;
-                    bInt += g.BonusIntelligence;
-                    bArm += g.BonusArmour;
-                    bLuck += g.BonusLuck;
-                }
-            }
-
-            lblName.Text = $"[{className.ToUpper()}] {h.Name} | DMG: {h.CalculateDamage()} | Pancerz: {h.Armour + bArm}";
+            lblName.Text = $"[{className.ToUpper()}] {h.Name} | DMG: {h.CalculateDamage()} | Pancerz: {h.TotalArmour}";
             lblLevel.Text = $"Poziom: {h.Level} (EXP: {h.Experience}/{h.ExperienceToNextLevel}) | HP: {h.CurrentHp}/{h.MaxHp} | POTEGA: {h.CalculateTotalPower()}";
             lblGold.Text = $"Zloto: {h.Gold}";
             lblDay.Text = $"Dzien: {h.CurrentDay}";
@@ -195,10 +180,10 @@ namespace HeroSimulator.App
             pbEnergy.Maximum = h.MaxEnergy;
             pbEnergy.Value = Math.Min(h.Energy, h.MaxEnergy);
 
-            lblStr.Text = $"STR: {h.Strength + bStr} ({h.Strength}+{bStr}) " + (h is Warrior ? "[+2 DMG/pkt]" : "");
-            lblDex.Text = $"DEX: {h.Dexterity + bDex} ({h.Dexterity}+{bDex}) " + (h is Scout ? "[+2 DMG/pkt]" : "");
-            lblInt.Text = $"INT: {h.Intelligence + bInt} ({h.Intelligence}+{bInt}) " + (h is Mage ? "[+3 DMG/pkt]" : "");
-            lblLuck.Text = $"LUCK: {h.Luck + bLuck} ({h.Luck}+{bLuck}) [Kryt: {h.CalculateCriticalChance()}%]";
+            lblStr.Text = $"STR: {h.TotalStrength} ({h.Strength}+{bonusStr}) " + (h is Warrior ? "[+2 DMG/pkt]" : "");
+            lblDex.Text = $"DEX: {h.TotalDexterity} ({h.Dexterity}+{bonusDex}) " + (h is Scout ? "[+2 DMG/pkt]" : "");
+            lblInt.Text = $"INT: {h.TotalIntelligence} ({h.Intelligence}+{bonusInt}) " + (h is Mage ? "[+3 DMG/pkt]" : "");
+            lblLuck.Text = $"LUCK: {h.TotalLuck} ({h.Luck}+{bonusLuck}) [Kryt: {h.CalculateCriticalChance()}%]";
 
             btnBuyStr.Text = $"+1 ({_gameService.GetAttributeUpgradeCost(h.Strength)}g)";
             btnBuyDex.Text = $"+1 ({_gameService.GetAttributeUpgradeCost(h.Dexterity)}g)";
