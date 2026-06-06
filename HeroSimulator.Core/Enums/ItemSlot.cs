@@ -7,6 +7,7 @@
         Pants,
         Boots,
         Amulet,
-        Ring
+        Ring,
+        None
     }
 }

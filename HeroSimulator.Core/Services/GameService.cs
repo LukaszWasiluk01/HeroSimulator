@@ -62,39 +62,59 @@ namespace HeroSimulator.Core.Services
                 int multiplier = rarity == ItemRarity.Rare ? 3 : rarity == ItemRarity.Magic ? 2 : 1;
                 int statBonus = (_hero.Level + _random.Next(1, 5)) * multiplier;
                 int price = statBonus * 10;
-                int itemType = _random.Next(0, 6);
+                int itemType = _random.Next(0, 7);
 
-                switch (itemType)
+                if (itemType == 6)
                 {
-                    case 0:
-                        if (_hero is Mage)
-                        {
-                            item = new Weapon($"Kostur poziomu {_hero.Level}", rarity) { BonusIntelligence = statBonus, Price = price };
-                        }
-                        else if (_hero is Scout)
-                        {
-                            item = new Weapon($"Luk poziomu {_hero.Level}", rarity) { BonusDexterity = statBonus, Price = price };
-                        }
-                        else
-                        {
-                            item = new Weapon($"Miecz poziomu {_hero.Level}", rarity) { BonusStrength = statBonus, Price = price };
-                        }
-                        break;
-                    case 1:
-                        item = new Armor($"Zbroja poziomu {_hero.Level}", rarity) { BonusArmour = statBonus, Price = price };
-                        break;
-                    case 2:
-                        item = new Pants($"Spodnie poziomu {_hero.Level}", rarity) { BonusArmour = statBonus / 2, BonusStrength = statBonus / 2, Price = price };
-                        break;
-                    case 3:
-                        item = new Boots($"Buty poziomu {_hero.Level}", rarity) { BonusArmour = statBonus / 2, BonusDexterity = statBonus / 2, Price = price };
-                        break;
-                    case 4:
-                        item = new Amulet($"Amulet poziomu {_hero.Level}", rarity) { BonusIntelligence = statBonus, BonusLuck = statBonus / 2, Price = price + (statBonus * 5) };
-                        break;
-                    default:
-                        item = new Ring($"Pierscien poziomu {_hero.Level}", rarity) { BonusStrength = statBonus / 2, BonusDexterity = statBonus / 2, BonusLuck = statBonus / 2, Price = price + (statBonus * 5) };
-                        break;
+                    item = new Gem($"Klejnot poziomu {_hero.Level}", rarity) { Price = price / 2 };
+                    int gemType = _random.Next(0, 4);
+
+                    if (gemType == 0)
+                        item.BonusStrength = statBonus;
+                    else if (gemType == 1)
+                        item.BonusDexterity = statBonus;
+                    else if (gemType == 2)
+                        item.BonusIntelligence = statBonus;
+                    else
+                    {
+                        item.BonusLuck = statBonus;
+                        item.Price = price;
+                    }
+                }
+                else
+                {
+                    switch (itemType)
+                    {
+                        case 0:
+                            if (_hero is Mage)
+                            {
+                                item = new Weapon($"Kostur poziomu {_hero.Level}", rarity) { BonusIntelligence = statBonus, Price = price };
+                            }
+                            else if (_hero is Scout)
+                            {
+                                item = new Weapon($"Luk poziomu {_hero.Level}", rarity) { BonusDexterity = statBonus, Price = price };
+                            }
+                            else
+                            {
+                                item = new Weapon($"Miecz poziomu {_hero.Level}", rarity) { BonusStrength = statBonus, Price = price };
+                            }
+                            break;
+                        case 1:
+                            item = new Armor($"Zbroja poziomu {_hero.Level}", rarity) { BonusArmour = statBonus, Price = price };
+                            break;
+                        case 2:
+                            item = new Pants($"Spodnie poziomu {_hero.Level}", rarity) { BonusArmour = statBonus / 2, BonusStrength = statBonus / 2, Price = price };
+                            break;
+                        case 3:
+                            item = new Boots($"Buty poziomu {_hero.Level}", rarity) { BonusArmour = statBonus / 2, BonusDexterity = statBonus / 2, Price = price };
+                            break;
+                        case 4:
+                            item = new Amulet($"Amulet poziomu {_hero.Level}", rarity) { BonusIntelligence = statBonus, BonusLuck = statBonus / 2, Price = price + (statBonus * 5) };
+                            break;
+                        default:
+                            item = new Ring($"Pierscien poziomu {_hero.Level}", rarity) { BonusStrength = statBonus / 2, BonusDexterity = statBonus / 2, BonusLuck = statBonus / 2, Price = price + (statBonus * 5) };
+                            break;
+                    }
                 }
                 items.Add(item);
             }
@@ -128,6 +148,11 @@ namespace HeroSimulator.Core.Services
             foreach (var item in _hero.Equipment.Values)
             {
                 totalLuck += item.BonusLuck;
+
+                foreach (var gem in item.SocketedGems)
+                {
+                    totalLuck += gem.BonusLuck;
+                }
             }
 
             int critChance = totalLuck * 2;
@@ -143,6 +168,11 @@ namespace HeroSimulator.Core.Services
             foreach (var item in _hero.Equipment.Values)
             {
                 totalArmour += item.BonusArmour;
+
+                foreach (var gem in item.SocketedGems)
+                {
+                    totalArmour += gem.BonusArmour;
+                }
             }
 
             double enemyVariance = _random.Next(80, 121) / 100.0;
@@ -219,6 +249,11 @@ namespace HeroSimulator.Core.Services
         {
             if (_hero.Backpack.Contains(item))
             {
+                if (item is Gem)
+                {
+                    throw new ArgumentException("Nie mozna zalozyc klejnotu na siebie. Musisz go osadzic w przedmiocie.");
+                }
+
                 if (_hero.Equipment.ContainsKey(item.Slot))
                 {
                     _hero.Backpack.Add(_hero.Equipment[item.Slot]);
@@ -247,6 +282,36 @@ namespace HeroSimulator.Core.Services
                 OnLogMessage?.Invoke($"Zdjete: {item.Name}.");
                 OnGameStateChanged?.Invoke();
             }
+        }
+
+        public void SocketGem(Item targetItem, Gem gem)
+        {
+            if (!_hero.Backpack.Contains(gem))
+            {
+                throw new ArgumentException("Klejnot musi znajdowac sie w plecaku.");
+            }
+
+            bool isOwned = _hero.Backpack.Contains(targetItem) || _hero.Equipment.Values.Contains(targetItem);
+            if (!isOwned)
+            {
+                throw new ArgumentException("Nie posiadasz wybranego przedmiotu docelowego.");
+            }
+
+            if (targetItem is Gem)
+            {
+                throw new ArgumentException("Nie mozna wlozyc klejnotu do innego klejnotu.");
+            }
+
+            if (targetItem.SocketedGems.Count >= targetItem.MaxSockets)
+            {
+                throw new ArgumentException($"Przedmiot {targetItem.Name} nie ma juz wolnych gniazd.");
+            }
+
+            targetItem.SocketedGems.Add(gem);
+            _hero.Backpack.Remove(gem);
+
+            OnLogMessage?.Invoke($"Osadzono {gem.Name} w {targetItem.Name}.");
+            OnGameStateChanged?.Invoke();
         }
 
         public int GetAttributeUpgradeCost(int currentValue)

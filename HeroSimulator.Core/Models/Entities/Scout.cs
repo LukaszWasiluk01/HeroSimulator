@@ -18,6 +18,11 @@
             foreach (var item in Equipment.Values)
             {
                 equipmentBonus += item.BonusDexterity;
+
+                foreach (var gem in item.SocketedGems)
+                {
+                    equipmentBonus += gem.BonusDexterity;
+                }
             }
 
             return (Dexterity + equipmentBonus) * 2;

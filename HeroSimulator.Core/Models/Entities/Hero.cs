@@ -64,6 +64,11 @@ namespace HeroSimulator.Core.Models.Entities
             foreach (var item in Equipment.Values)
             {
                 equipmentPower += item.BonusStrength + item.BonusDexterity + item.BonusIntelligence + item.BonusArmour + item.BonusLuck;
+
+                foreach (var gem in item.SocketedGems)
+                {
+                    equipmentPower += gem.BonusStrength + gem.BonusDexterity + gem.BonusIntelligence + gem.BonusArmour + gem.BonusLuck;
+                }
             }
 
             return basePower + equipmentPower;

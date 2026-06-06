@@ -93,7 +93,50 @@ namespace HeroSimulator.App
                 s.Add($"+{item.BonusArmour} PANC");
             if (item.BonusLuck > 0)
                 s.Add($"+{item.BonusLuck} LUCK");
-            return string.Join(", ", s);
+
+            string stats = string.Join(", ", s);
+
+            if (item.MaxSockets > 0)
+            {
+                stats += $" [Gniazda: {item.SocketedGems.Count}/{item.MaxSockets}]";
+
+                if (item.SocketedGems.Count > 0)
+                {
+                    int gStr = 0, gDex = 0, gInt = 0, gArm = 0, gLuck = 0;
+
+                    foreach (var gem in item.SocketedGems)
+                    {
+                        gStr += gem.BonusStrength;
+                        gDex += gem.BonusDexterity;
+                        gInt += gem.BonusIntelligence;
+                        gArm += gem.BonusArmour;
+                        gLuck += gem.BonusLuck;
+                    }
+
+                    var gs = new List<string>();
+                    if (gStr > 0)
+                        gs.Add($"+{gStr} STR");
+                    if (gDex > 0)
+                        gs.Add($"+{gDex} DEX");
+                    if (gInt > 0)
+                        gs.Add($"+{gInt} INT");
+                    if (gArm > 0)
+                        gs.Add($"+{gArm} PANC");
+                    if (gLuck > 0)
+                        gs.Add($"+{gLuck} LUCK");
+
+                    if (gs.Count > 0)
+                    {
+                        stats += $" (Klejnoty: {string.Join(", ", gs)})";
+                    }
+                }
+            }
+            else if (item is Gem)
+            {
+                stats += $" [Klejnot]";
+            }
+
+            return stats;
         }
 
         private string GetSlotPolishName(ItemSlot slot)
@@ -106,6 +149,7 @@ namespace HeroSimulator.App
                 ItemSlot.Boots => "Buty",
                 ItemSlot.Amulet => "Amulet",
                 ItemSlot.Ring => "Pierscien",
+                ItemSlot.None => "Brak",
                 _ => slot.ToString()
             };
         }
@@ -124,6 +168,15 @@ namespace HeroSimulator.App
                 bInt += i.BonusIntelligence;
                 bArm += i.BonusArmour;
                 bLuck += i.BonusLuck;
+
+                foreach (var g in i.SocketedGems)
+                {
+                    bStr += g.BonusStrength;
+                    bDex += g.BonusDexterity;
+                    bInt += g.BonusIntelligence;
+                    bArm += g.BonusArmour;
+                    bLuck += g.BonusLuck;
+                }
             }
 
             lblName.Text = $"[{className.ToUpper()}] {h.Name} | DMG: {h.CalculateDamage()} | Pancerz: {h.Armour + bArm}";
@@ -161,6 +214,9 @@ namespace HeroSimulator.App
             lbEquipped.Items.Clear();
             foreach (ItemSlot slot in Enum.GetValues(typeof(ItemSlot)))
             {
+                if (slot == ItemSlot.None)
+                    continue;
+
                 string slotName = GetSlotPolishName(slot);
                 if (h.Equipment.TryGetValue(slot, out Item equippedItem))
                 {
@@ -264,19 +320,68 @@ namespace HeroSimulator.App
                 if (lbBackpack.SelectedIndex != -1)
                 {
                     _gameService.EquipItem(h.Backpack[lbBackpack.SelectedIndex]);
+                    lbBackpack.ClearSelected();
                 }
                 else if (lbEquipped.SelectedIndex != -1)
                 {
-                    ItemSlot selectedSlot = (ItemSlot)lbEquipped.SelectedIndex;
+                    var slots = Enum.GetValues(typeof(ItemSlot)).Cast<ItemSlot>().Where(s => s != ItemSlot.None).ToList();
+                    ItemSlot selectedSlot = slots[lbEquipped.SelectedIndex];
+
                     if (h.Equipment.TryGetValue(selectedSlot, out Item itemToUnequip))
                     {
                         _gameService.UnequipItem(itemToUnequip);
                     }
+                    lbEquipped.ClearSelected();
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message, "Blad", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        private void btnSocketGem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                var h = _gameService.GetHero();
+
+                if (lbBackpack.SelectedIndex == -1)
+                {
+                    MessageBox.Show("Najpierw zaznacz klejnot w plecaku.", "Informacja", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+
+                var selectedBackpackItem = h.Backpack[lbBackpack.SelectedIndex];
+                if (!(selectedBackpackItem is Gem gem))
+                {
+                    MessageBox.Show("Zaznaczony przedmiot w plecaku nie jest klejnotem.", "Informacja", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+
+                if (lbEquipped.SelectedIndex == -1)
+                {
+                    MessageBox.Show("Zaznacz zalozony przedmiot, w ktorym chcesz osadzic klejnot.", "Informacja", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+
+                var slots = Enum.GetValues(typeof(ItemSlot)).Cast<ItemSlot>().Where(s => s != ItemSlot.None).ToList();
+                ItemSlot selectedSlot = slots[lbEquipped.SelectedIndex];
+
+                if (!h.Equipment.TryGetValue(selectedSlot, out Item targetItem))
+                {
+                    MessageBox.Show("W wybranym slocie nie ma zadnego przedmiotu.", "Informacja", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+
+                _gameService.SocketGem(targetItem, gem);
+
+                lbBackpack.ClearSelected();
+                lbEquipped.ClearSelected();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Blad osadzania", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 

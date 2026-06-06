@@ -9,6 +9,7 @@ namespace HeroSimulator.Core.Models.Items
     [JsonDerivedType(typeof(Boots), "Boots")]
     [JsonDerivedType(typeof(Amulet), "Amulet")]
     [JsonDerivedType(typeof(Ring), "Ring")]
+    [JsonDerivedType(typeof(Gem), "Gem")]
     public abstract class Item
     {
         public string Id
@@ -51,6 +52,14 @@ namespace HeroSimulator.Core.Models.Items
         {
             get; set;
         }
+        public int MaxSockets
+        {
+            get; set;
+        }
+        public List<Gem> SocketedGems
+        {
+            get; set;
+        }
 
         protected Item(string name, ItemRarity rarity, ItemSlot slot)
         {
@@ -58,6 +67,16 @@ namespace HeroSimulator.Core.Models.Items
             Name = name;
             Rarity = rarity;
             Slot = slot;
+            SocketedGems = new List<Gem>();
+
+            if (slot != ItemSlot.None)
+            {
+                MaxSockets = rarity == ItemRarity.Rare ? 2 : rarity == ItemRarity.Magic ? 1 : 0;
+            }
+            else
+            {
+                MaxSockets = 0;
+            }
         }
     }
 }

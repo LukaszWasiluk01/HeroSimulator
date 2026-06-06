@@ -30,6 +30,9 @@
         {
             tabControl1 = new TabControl();
             tabPage1 = new TabPage();
+            btnSocketGem = new Button();
+            btnBuyLuck = new Button();
+            lblLuck = new Label();
             btnSell = new Button();
             btnBuyInt = new Button();
             btnBuyDex = new Button();
@@ -66,8 +69,6 @@
             btnRestartGame = new ToolStripMenuItem();
             btnSaveGame = new ToolStripMenuItem();
             menuStrip1 = new MenuStrip();
-            lblLuck = new Label();
-            btnBuyLuck = new Button();
             tabControl1.SuspendLayout();
             tabPage1.SuspendLayout();
             tabPage2.SuspendLayout();
@@ -88,6 +89,7 @@
             // 
             // tabPage1
             // 
+            tabPage1.Controls.Add(btnSocketGem);
             tabPage1.Controls.Add(btnBuyLuck);
             tabPage1.Controls.Add(lblLuck);
             tabPage1.Controls.Add(btnSell);
@@ -116,6 +118,37 @@
             tabPage1.TabIndex = 0;
             tabPage1.Text = "Postać";
             tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // btnSocketGem
+            // 
+            btnSocketGem.Location = new Point(667, 166);
+            btnSocketGem.Name = "btnSocketGem";
+            btnSocketGem.Size = new Size(87, 23);
+            btnSocketGem.TabIndex = 22;
+            btnSocketGem.Text = "Włóż klejnot";
+            btnSocketGem.UseVisualStyleBackColor = true;
+            btnSocketGem.Click += btnSocketGem_Click;
+            // 
+            // btnBuyLuck
+            // 
+            btnBuyLuck.Location = new Point(667, 135);
+            btnBuyLuck.Name = "btnBuyLuck";
+            btnBuyLuck.Size = new Size(87, 23);
+            btnBuyLuck.TabIndex = 21;
+            btnBuyLuck.Text = "+1 (Koszt: 10)";
+            btnBuyLuck.UseVisualStyleBackColor = true;
+            btnBuyLuck.Click += btnBuyLuck_Click;
+            // 
+            // lblLuck
+            // 
+            lblLuck.AutoSize = true;
+            lblLuck.Font = new Font("Segoe UI", 12F);
+            lblLuck.Location = new Point(388, 134);
+            lblLuck.Name = "lblLuck";
+            lblLuck.Padding = new Padding(0, 0, 0, 10);
+            lblLuck.Size = new Size(51, 31);
+            lblLuck.TabIndex = 20;
+            lblLuck.Text = "LUCK:";
             // 
             // btnSell
             // 
@@ -178,6 +211,7 @@
             // lbEquipped
             // 
             lbEquipped.FormattingEnabled = true;
+            lbEquipped.HorizontalScrollbar = true;
             lbEquipped.ItemHeight = 15;
             lbEquipped.Location = new Point(388, 199);
             lbEquipped.Name = "lbEquipped";
@@ -208,6 +242,7 @@
             // lbBackpack
             // 
             lbBackpack.FormattingEnabled = true;
+            lbBackpack.HorizontalScrollbar = true;
             lbBackpack.ItemHeight = 15;
             lbBackpack.Location = new Point(16, 199);
             lbBackpack.Name = "lbBackpack";
@@ -365,6 +400,7 @@
             // lbLogs
             // 
             lbLogs.FormattingEnabled = true;
+            lbLogs.HorizontalScrollbar = true;
             lbLogs.ItemHeight = 15;
             lbLogs.Location = new Point(384, 89);
             lbLogs.Name = "lbLogs";
@@ -374,6 +410,7 @@
             // lbQuests
             // 
             lbQuests.FormattingEnabled = true;
+            lbQuests.HorizontalScrollbar = true;
             lbQuests.ItemHeight = 15;
             lbQuests.Location = new Point(15, 89);
             lbQuests.Name = "lbQuests";
@@ -435,6 +472,7 @@
             // lbShop
             // 
             lbShop.FormattingEnabled = true;
+            lbShop.HorizontalScrollbar = true;
             lbShop.ItemHeight = 15;
             lbShop.Location = new Point(15, 46);
             lbShop.Name = "lbShop";
@@ -481,27 +519,6 @@
             menuStrip1.Size = new Size(800, 24);
             menuStrip1.TabIndex = 0;
             menuStrip1.Text = "menuStrip1";
-            // 
-            // lblLuck
-            // 
-            lblLuck.AutoSize = true;
-            lblLuck.Font = new Font("Segoe UI", 12F);
-            lblLuck.Location = new Point(388, 134);
-            lblLuck.Name = "lblLuck";
-            lblLuck.Padding = new Padding(0, 0, 0, 10);
-            lblLuck.Size = new Size(51, 31);
-            lblLuck.TabIndex = 20;
-            lblLuck.Text = "LUCK:";
-            // 
-            // btnBuyLuck
-            // 
-            btnBuyLuck.Location = new Point(667, 135);
-            btnBuyLuck.Name = "btnBuyLuck";
-            btnBuyLuck.Size = new Size(87, 23);
-            btnBuyLuck.TabIndex = 21;
-            btnBuyLuck.Text = "+1 (Koszt: 10)";
-            btnBuyLuck.UseVisualStyleBackColor = true;
-            btnBuyLuck.Click += btnBuyLuck_Click;
             // 
             // Form1
             // 
@@ -568,5 +585,6 @@
         private Button btnSell;
         private Button btnBuyLuck;
         private Label lblLuck;
+        private Button btnSocketGem;
     }
 }
