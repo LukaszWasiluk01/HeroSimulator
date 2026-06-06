@@ -113,17 +113,11 @@ namespace HeroSimulator.Core.Services
                     {
                         case 0:
                             if (_hero is Mage)
-                            {
                                 item = new Weapon($"Kostur poziomu {_hero.Level}", rarity) { BonusIntelligence = statBonus, Price = price };
-                            }
                             else if (_hero is Scout)
-                            {
                                 item = new Weapon($"Luk poziomu {_hero.Level}", rarity) { BonusDexterity = statBonus, Price = price };
-                            }
                             else
-                            {
                                 item = new Weapon($"Miecz poziomu {_hero.Level}", rarity) { BonusStrength = statBonus, Price = price };
-                            }
                             break;
                         case 1:
                             item = new Armor($"Zbroja poziomu {_hero.Level}", rarity) { BonusArmour = statBonus, Price = price };
@@ -309,9 +303,16 @@ namespace HeroSimulator.Core.Services
         {
             if (_hero.Backpack.Contains(item))
             {
-                int sellPrice = item.Price / 2;
+                int totalItemValue = item.Price;
+                foreach (var gem in item.SocketedGems)
+                {
+                    totalItemValue += gem.Price;
+                }
+
+                int sellPrice = totalItemValue / 2;
                 _hero.Gold += sellPrice;
                 _hero.Backpack.Remove(item);
+
                 OnLogMessage?.Invoke($"Sprzedano {item.Name} za {sellPrice}g.");
                 OnGameStateChanged?.Invoke();
             }
@@ -545,7 +546,7 @@ namespace HeroSimulator.Core.Services
                 _hero.ExperienceToNextLevel = (int)nextExp;
             }
 
-            _hero.MaxHp += 20;
+            _hero.MaxHp += 50;
             _hero.CurrentHp = _hero.MaxHp;
             OnLogMessage?.Invoke($"Awans na {_hero.Level} poziom! Odnowiono maksymalne zdrowie.");
         }

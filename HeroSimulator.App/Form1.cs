@@ -219,7 +219,13 @@ namespace HeroSimulator.App
             lbBackpack.Items.Clear();
             foreach (var item in h.Backpack)
             {
-                lbBackpack.Items.Add($"{item.Name} | {GetItemStatsInfo(item)} | Sprzedaj: {item.Price / 2}g");
+                int totalItemPrice = item.Price;
+                foreach (var g in item.SocketedGems)
+                {
+                    totalItemPrice += g.Price;
+                }
+
+                lbBackpack.Items.Add($"{item.Name} | {GetItemStatsInfo(item)} | Sprzedaj: {totalItemPrice / 2}g");
             }
 
             lbEquipped.Items.Clear();
