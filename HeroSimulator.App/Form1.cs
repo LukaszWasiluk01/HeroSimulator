@@ -193,7 +193,7 @@ namespace HeroSimulator.App
             if (h.HeroCastle != null && h.HeroCastle.GemMine != null)
             {
                 lblMineInfo.Text = $"Kopalnia Klejnotow (Poziom: {h.HeroCastle.GemMine.Level})";
-                lblMineStorage.Text = $"Wykopane klejnoty: {h.HeroCastle.GemMine.StoredGems.Count}";
+                lblMineStorage.Text = $"Wykopane klejnoty: {h.HeroCastle.GemMine.StoredGems.Count}/{h.HeroCastle.GemMine.MaxCapacity}";
                 btnUpgradeMine.Text = $"Ulepsz kopalnie ({h.HeroCastle.GemMine.GetUpgradeCost()}g)";
                 btnCollectGems.Enabled = h.HeroCastle.GemMine.StoredGems.Count > 0;
             }

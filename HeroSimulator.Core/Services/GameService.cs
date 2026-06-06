@@ -113,11 +113,17 @@ namespace HeroSimulator.Core.Services
                     {
                         case 0:
                             if (_hero is Mage)
+                            {
                                 item = new Weapon($"Kostur poziomu {_hero.Level}", rarity) { BonusIntelligence = statBonus, Price = price };
+                            }
                             else if (_hero is Scout)
+                            {
                                 item = new Weapon($"Luk poziomu {_hero.Level}", rarity) { BonusDexterity = statBonus, Price = price };
+                            }
                             else
+                            {
                                 item = new Weapon($"Miecz poziomu {_hero.Level}", rarity) { BonusStrength = statBonus, Price = price };
+                            }
                             break;
                         case 1:
                             item = new Armor($"Zbroja poziomu {_hero.Level}", rarity) { BonusArmour = statBonus, Price = price };
@@ -509,6 +515,12 @@ namespace HeroSimulator.Core.Services
         private void MineGems()
         {
             var mine = _hero.HeroCastle.GemMine;
+
+            if (mine.StoredGems.Count >= mine.MaxCapacity)
+            {
+                return;
+            }
+
             int effectiveRoll = _random.Next(1, 101) + (mine.Level * 2);
 
             ItemRarity rarity = effectiveRoll > 95 ? ItemRarity.Rare : effectiveRoll > 60 ? ItemRarity.Magic : ItemRarity.Common;

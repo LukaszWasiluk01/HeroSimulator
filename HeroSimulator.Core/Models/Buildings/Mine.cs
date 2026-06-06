@@ -12,16 +12,21 @@ namespace HeroSimulator.Core.Models.Buildings
         {
             get; set;
         }
+        public int MaxCapacity
+        {
+            get; set;
+        }
 
         public Mine()
         {
             Level = 1;
             StoredGems = new List<Gem>();
+            MaxCapacity = 5;
         }
 
         public int GetUpgradeCost()
         {
-            return Level * 50;
+            return Level * Level * 50;
         }
     }
 }
