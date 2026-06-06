@@ -113,17 +113,11 @@ namespace HeroSimulator.Core.Services
                     {
                         case 0:
                             if (_hero is Mage)
-                            {
                                 item = new Weapon($"Kostur poziomu {_hero.Level}", rarity) { BonusIntelligence = statBonus, Price = price };
-                            }
                             else if (_hero is Scout)
-                            {
                                 item = new Weapon($"Luk poziomu {_hero.Level}", rarity) { BonusDexterity = statBonus, Price = price };
-                            }
                             else
-                            {
                                 item = new Weapon($"Miecz poziomu {_hero.Level}", rarity) { BonusStrength = statBonus, Price = price };
-                            }
                             break;
                         case 1:
                             item = new Armor($"Zbroja poziomu {_hero.Level}", rarity) { BonusArmour = statBonus, Price = price };
@@ -220,7 +214,21 @@ namespace HeroSimulator.Core.Services
             int randomizedEnemyDamage = (int)(enemyDamage * enemyVariance);
             int finalEnemyDamage = Math.Max(1, randomizedEnemyDamage - (totalArmour / 2));
 
-            int finalHeroHp = Math.Max(0, currentHeroHp - finalEnemyDamage);
+            if (isPerfectHit)
+            {
+                finalEnemyDamage /= 2;
+            }
+
+            int finalHeroHp = currentHeroHp;
+
+            if (finalEnemyHp > 0)
+            {
+                finalHeroHp = Math.Max(0, currentHeroHp - finalEnemyDamage);
+            }
+            else
+            {
+                finalEnemyDamage = 0;
+            }
 
             return new CombatTurnResult
             {
@@ -309,13 +317,7 @@ namespace HeroSimulator.Core.Services
         {
             if (_hero.Backpack.Contains(item))
             {
-                int totalItemValue = item.Price;
-                foreach (var gem in item.SocketedGems)
-                {
-                    totalItemValue += gem.Price;
-                }
-
-                int sellPrice = totalItemValue / 2;
+                int sellPrice = item.TotalPrice / 2;
                 _hero.Gold += sellPrice;
                 _hero.Backpack.Remove(item);
 

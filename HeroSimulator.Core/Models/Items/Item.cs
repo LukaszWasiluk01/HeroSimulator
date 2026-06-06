@@ -61,6 +61,20 @@ namespace HeroSimulator.Core.Models.Items
             get; set;
         }
 
+        [JsonIgnore]
+        public int TotalPrice
+        {
+            get
+            {
+                int total = Price;
+                foreach (var gem in SocketedGems)
+                {
+                    total += gem.Price;
+                }
+                return total;
+            }
+        }
+
         protected Item(string name, ItemRarity rarity, ItemSlot slot)
         {
             Id = Guid.NewGuid().ToString();
