@@ -1,4 +1,5 @@
 ﻿using HeroSimulator.Core.Enums;
+using HeroSimulator.Core.Models.Buildings;
 using HeroSimulator.Core.Models.Items;
 using System.Text.Json.Serialization;
 
@@ -41,6 +42,10 @@ namespace HeroSimulator.Core.Models.Entities
         {
             get; set;
         }
+        public Castle HeroCastle
+        {
+            get; set;
+        }
 
         protected Hero(string name) : base(name, 1)
         {
@@ -54,6 +59,7 @@ namespace HeroSimulator.Core.Models.Entities
             ExperienceToNextLevel = 100;
             Backpack = new List<Item>();
             Equipment = new Dictionary<ItemSlot, Item>();
+            HeroCastle = new Castle();
         }
 
         public override int CalculateTotalPower()

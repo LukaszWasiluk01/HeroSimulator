@@ -69,11 +69,17 @@
             btnRestartGame = new ToolStripMenuItem();
             btnSaveGame = new ToolStripMenuItem();
             menuStrip1 = new MenuStrip();
+            tabPage4 = new TabPage();
+            lblMineInfo = new Label();
+            lblMineStorage = new Label();
+            btnUpgradeMine = new Button();
+            btnCollectGems = new Button();
             tabControl1.SuspendLayout();
             tabPage1.SuspendLayout();
             tabPage2.SuspendLayout();
             tabPage3.SuspendLayout();
             menuStrip1.SuspendLayout();
+            tabPage4.SuspendLayout();
             SuspendLayout();
             // 
             // tabControl1
@@ -81,6 +87,7 @@
             tabControl1.Controls.Add(tabPage1);
             tabControl1.Controls.Add(tabPage2);
             tabControl1.Controls.Add(tabPage3);
+            tabControl1.Controls.Add(tabPage4);
             tabControl1.Location = new Point(12, 27);
             tabControl1.Name = "tabControl1";
             tabControl1.SelectedIndex = 0;
@@ -520,6 +527,61 @@
             menuStrip1.TabIndex = 0;
             menuStrip1.Text = "menuStrip1";
             // 
+            // tabPage4
+            // 
+            tabPage4.Controls.Add(btnCollectGems);
+            tabPage4.Controls.Add(btnUpgradeMine);
+            tabPage4.Controls.Add(lblMineStorage);
+            tabPage4.Controls.Add(lblMineInfo);
+            tabPage4.Location = new Point(4, 24);
+            tabPage4.Name = "tabPage4";
+            tabPage4.Size = new Size(768, 383);
+            tabPage4.TabIndex = 3;
+            tabPage4.Text = "Zamek";
+            tabPage4.UseVisualStyleBackColor = true;
+            // 
+            // lblMineInfo
+            // 
+            lblMineInfo.AutoSize = true;
+            lblMineInfo.Font = new Font("Segoe UI", 12F);
+            lblMineInfo.Location = new Point(12, 9);
+            lblMineInfo.Name = "lblMineInfo";
+            lblMineInfo.Padding = new Padding(0, 0, 0, 10);
+            lblMineInfo.Size = new Size(221, 31);
+            lblMineInfo.TabIndex = 1;
+            lblMineInfo.Text = "Kopalnia Klejnotów (Poziom 1)";
+            // 
+            // lblMineStorage
+            // 
+            lblMineStorage.AutoSize = true;
+            lblMineStorage.Font = new Font("Segoe UI", 12F);
+            lblMineStorage.Location = new Point(12, 40);
+            lblMineStorage.Name = "lblMineStorage";
+            lblMineStorage.Padding = new Padding(0, 0, 0, 10);
+            lblMineStorage.Size = new Size(159, 31);
+            lblMineStorage.TabIndex = 2;
+            lblMineStorage.Text = "Wykopane klejnoty: 0";
+            // 
+            // btnUpgradeMine
+            // 
+            btnUpgradeMine.Location = new Point(267, 10);
+            btnUpgradeMine.Name = "btnUpgradeMine";
+            btnUpgradeMine.Size = new Size(134, 23);
+            btnUpgradeMine.TabIndex = 17;
+            btnUpgradeMine.Text = "Ulepsz kopalnię";
+            btnUpgradeMine.UseVisualStyleBackColor = true;
+            btnUpgradeMine.Click += btnUpgradeMine_Click;
+            // 
+            // btnCollectGems
+            // 
+            btnCollectGems.Location = new Point(267, 41);
+            btnCollectGems.Name = "btnCollectGems";
+            btnCollectGems.Size = new Size(134, 23);
+            btnCollectGems.TabIndex = 18;
+            btnCollectGems.Text = "Odbierz klejnoty";
+            btnCollectGems.UseVisualStyleBackColor = true;
+            btnCollectGems.Click += btnCollectGems_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -540,6 +602,8 @@
             tabPage3.PerformLayout();
             menuStrip1.ResumeLayout(false);
             menuStrip1.PerformLayout();
+            tabPage4.ResumeLayout(false);
+            tabPage4.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -586,5 +650,10 @@
         private Button btnBuyLuck;
         private Label lblLuck;
         private Button btnSocketGem;
+        private TabPage tabPage4;
+        private Button btnCollectGems;
+        private Button btnUpgradeMine;
+        private Label lblMineStorage;
+        private Label lblMineInfo;
     }
 }

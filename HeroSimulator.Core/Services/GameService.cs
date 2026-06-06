@@ -375,13 +375,89 @@ namespace HeroSimulator.Core.Services
             OnGameStateChanged?.Invoke();
         }
 
+        public void UpgradeMine()
+        {
+            int cost = _hero.HeroCastle.GemMine.GetUpgradeCost();
+            if (_hero.Gold < cost)
+            {
+                throw new NotEnoughGoldException("Brak zlota na ulepszenie kopalni.");
+            }
+
+            _hero.Gold -= cost;
+            _hero.HeroCastle.GemMine.Level++;
+            OnLogMessage?.Invoke($"Ulepszono Kopalnie Klejnotow na poziom {_hero.HeroCastle.GemMine.Level}.");
+            OnGameStateChanged?.Invoke();
+        }
+
+        public void CollectGemsFromMine()
+        {
+            var mine = _hero.HeroCastle.GemMine;
+            if (mine.StoredGems.Count == 0)
+            {
+                throw new ArgumentException("Brak wykopanych klejnotow w magazynie kopalni.");
+            }
+
+            List<Gem> collected = new List<Gem>();
+            foreach (var gem in mine.StoredGems.ToList())
+            {
+                if (_hero.Backpack.Count >= 10)
+                {
+                    break;
+                }
+                _hero.Backpack.Add(gem);
+                mine.StoredGems.Remove(gem);
+                collected.Add(gem);
+            }
+
+            if (collected.Count > 0)
+            {
+                OnLogMessage?.Invoke($"Odebrano {collected.Count} klejnotow z kopalni do plecaka.");
+                OnGameStateChanged?.Invoke();
+            }
+
+            if (mine.StoredGems.Count > 0 && _hero.Backpack.Count >= 10)
+            {
+                throw new InventoryFullException("Plecak pelen, reszta klejnotow zostala w magazynie kopalni.");
+            }
+        }
+
         public void EndDay()
         {
             _hero.CurrentDay++;
             _hero.Energy = _hero.MaxEnergy;
             _hero.CurrentHp = _hero.MaxHp;
+
+            MineGems();
+
             OnLogMessage?.Invoke($"Rozpoczeto nowy dzien ({_hero.CurrentDay}). Zregenerowano sily.");
             OnGameStateChanged?.Invoke();
+        }
+
+        private void MineGems()
+        {
+            var mine = _hero.HeroCastle.GemMine;
+            int effectiveRoll = _random.Next(1, 101) + (mine.Level * 2);
+
+            ItemRarity rarity = effectiveRoll > 95 ? ItemRarity.Rare : effectiveRoll > 60 ? ItemRarity.Magic : ItemRarity.Common;
+            int multiplier = rarity == ItemRarity.Rare ? 3 : rarity == ItemRarity.Magic ? 2 : 1;
+
+            int statBonus = (mine.Level + _random.Next(1, 4)) * multiplier;
+
+            Gem newGem = new Gem($"Klejnot Kopalniany", rarity) { Price = statBonus * 5 };
+
+            int gemType = _random.Next(0, 4);
+            if (gemType == 0)
+                newGem.BonusStrength = statBonus;
+            else if (gemType == 1)
+                newGem.BonusDexterity = statBonus;
+            else if (gemType == 2)
+                newGem.BonusIntelligence = statBonus;
+            else
+            {
+                newGem.BonusLuck = statBonus;
+            }
+
+            mine.StoredGems.Add(newGem);
         }
 
         private void LevelUp()

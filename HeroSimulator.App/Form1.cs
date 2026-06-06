@@ -205,6 +205,14 @@ namespace HeroSimulator.App
             btnBuyInt.Text = $"+1 ({_gameService.GetAttributeUpgradeCost(h.Intelligence)}g)";
             btnBuyLuck.Text = $"+1 ({_gameService.GetAttributeUpgradeCost(h.Luck)}g)";
 
+            if (h.HeroCastle != null && h.HeroCastle.GemMine != null)
+            {
+                lblMineInfo.Text = $"Kopalnia Klejnotow (Poziom: {h.HeroCastle.GemMine.Level})";
+                lblMineStorage.Text = $"Wykopane klejnoty: {h.HeroCastle.GemMine.StoredGems.Count}";
+                btnUpgradeMine.Text = $"Ulepsz kopalnie ({h.HeroCastle.GemMine.GetUpgradeCost()}g)";
+                btnCollectGems.Enabled = h.HeroCastle.GemMine.StoredGems.Count > 0;
+            }
+
             lbBackpack.Items.Clear();
             foreach (var item in h.Backpack)
             {
@@ -382,6 +390,30 @@ namespace HeroSimulator.App
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "Blad osadzania", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        private void btnUpgradeMine_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                _gameService.UpgradeMine();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Blad", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        private void btnCollectGems_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                _gameService.CollectGemsFromMine();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Informacja", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 
