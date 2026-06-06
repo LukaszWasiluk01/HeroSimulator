@@ -65,21 +65,27 @@
             btnBuyItem = new Button();
             lbShop = new ListBox();
             label3 = new Label();
+            tabPage4 = new TabPage();
+            btnCollectGems = new Button();
+            btnUpgradeMine = new Button();
+            lblMineStorage = new Label();
+            lblMineInfo = new Label();
             plikToolStripMenuItem = new ToolStripMenuItem();
             btnRestartGame = new ToolStripMenuItem();
             btnSaveGame = new ToolStripMenuItem();
             menuStrip1 = new MenuStrip();
-            tabPage4 = new TabPage();
-            lblMineInfo = new Label();
-            lblMineStorage = new Label();
-            btnUpgradeMine = new Button();
-            btnCollectGems = new Button();
+            tabPage5 = new TabPage();
+            btnStartDungeon = new Button();
+            lblDungeonStats = new Label();
+            lblDungeonBoss = new Label();
+            lblDungeonRewards = new Label();
             tabControl1.SuspendLayout();
             tabPage1.SuspendLayout();
             tabPage2.SuspendLayout();
             tabPage3.SuspendLayout();
-            menuStrip1.SuspendLayout();
             tabPage4.SuspendLayout();
+            menuStrip1.SuspendLayout();
+            tabPage5.SuspendLayout();
             SuspendLayout();
             // 
             // tabControl1
@@ -88,6 +94,7 @@
             tabControl1.Controls.Add(tabPage2);
             tabControl1.Controls.Add(tabPage3);
             tabControl1.Controls.Add(tabPage4);
+            tabControl1.Controls.Add(tabPage5);
             tabControl1.Location = new Point(12, 27);
             tabControl1.Name = "tabControl1";
             tabControl1.SelectedIndex = 0;
@@ -497,6 +504,61 @@
             label3.TabIndex = 2;
             label3.Text = "Dzisiejsza oferta handlarza:";
             // 
+            // tabPage4
+            // 
+            tabPage4.Controls.Add(btnCollectGems);
+            tabPage4.Controls.Add(btnUpgradeMine);
+            tabPage4.Controls.Add(lblMineStorage);
+            tabPage4.Controls.Add(lblMineInfo);
+            tabPage4.Location = new Point(4, 24);
+            tabPage4.Name = "tabPage4";
+            tabPage4.Size = new Size(768, 383);
+            tabPage4.TabIndex = 3;
+            tabPage4.Text = "Zamek";
+            tabPage4.UseVisualStyleBackColor = true;
+            // 
+            // btnCollectGems
+            // 
+            btnCollectGems.Location = new Point(267, 41);
+            btnCollectGems.Name = "btnCollectGems";
+            btnCollectGems.Size = new Size(134, 23);
+            btnCollectGems.TabIndex = 18;
+            btnCollectGems.Text = "Odbierz klejnoty";
+            btnCollectGems.UseVisualStyleBackColor = true;
+            btnCollectGems.Click += btnCollectGems_Click;
+            // 
+            // btnUpgradeMine
+            // 
+            btnUpgradeMine.Location = new Point(267, 10);
+            btnUpgradeMine.Name = "btnUpgradeMine";
+            btnUpgradeMine.Size = new Size(134, 23);
+            btnUpgradeMine.TabIndex = 17;
+            btnUpgradeMine.Text = "Ulepsz kopalnię";
+            btnUpgradeMine.UseVisualStyleBackColor = true;
+            btnUpgradeMine.Click += btnUpgradeMine_Click;
+            // 
+            // lblMineStorage
+            // 
+            lblMineStorage.AutoSize = true;
+            lblMineStorage.Font = new Font("Segoe UI", 12F);
+            lblMineStorage.Location = new Point(12, 40);
+            lblMineStorage.Name = "lblMineStorage";
+            lblMineStorage.Padding = new Padding(0, 0, 0, 10);
+            lblMineStorage.Size = new Size(159, 31);
+            lblMineStorage.TabIndex = 2;
+            lblMineStorage.Text = "Wykopane klejnoty: 0";
+            // 
+            // lblMineInfo
+            // 
+            lblMineInfo.AutoSize = true;
+            lblMineInfo.Font = new Font("Segoe UI", 12F);
+            lblMineInfo.Location = new Point(12, 9);
+            lblMineInfo.Name = "lblMineInfo";
+            lblMineInfo.Padding = new Padding(0, 0, 0, 10);
+            lblMineInfo.Size = new Size(221, 31);
+            lblMineInfo.TabIndex = 1;
+            lblMineInfo.Text = "Kopalnia Klejnotów (Poziom 1)";
+            // 
             // plikToolStripMenuItem
             // 
             plikToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { btnRestartGame, btnSaveGame });
@@ -527,60 +589,61 @@
             menuStrip1.TabIndex = 0;
             menuStrip1.Text = "menuStrip1";
             // 
-            // tabPage4
+            // tabPage5
             // 
-            tabPage4.Controls.Add(btnCollectGems);
-            tabPage4.Controls.Add(btnUpgradeMine);
-            tabPage4.Controls.Add(lblMineStorage);
-            tabPage4.Controls.Add(lblMineInfo);
-            tabPage4.Location = new Point(4, 24);
-            tabPage4.Name = "tabPage4";
-            tabPage4.Size = new Size(768, 383);
-            tabPage4.TabIndex = 3;
-            tabPage4.Text = "Zamek";
-            tabPage4.UseVisualStyleBackColor = true;
+            tabPage5.Controls.Add(lblDungeonRewards);
+            tabPage5.Controls.Add(btnStartDungeon);
+            tabPage5.Controls.Add(lblDungeonStats);
+            tabPage5.Controls.Add(lblDungeonBoss);
+            tabPage5.Location = new Point(4, 24);
+            tabPage5.Name = "tabPage5";
+            tabPage5.Size = new Size(768, 383);
+            tabPage5.TabIndex = 4;
+            tabPage5.Text = "Lochy";
+            tabPage5.UseVisualStyleBackColor = true;
             // 
-            // lblMineInfo
+            // btnStartDungeon
             // 
-            lblMineInfo.AutoSize = true;
-            lblMineInfo.Font = new Font("Segoe UI", 12F);
-            lblMineInfo.Location = new Point(12, 9);
-            lblMineInfo.Name = "lblMineInfo";
-            lblMineInfo.Padding = new Padding(0, 0, 0, 10);
-            lblMineInfo.Size = new Size(221, 31);
-            lblMineInfo.TabIndex = 1;
-            lblMineInfo.Text = "Kopalnia Klejnotów (Poziom 1)";
+            btnStartDungeon.Location = new Point(12, 105);
+            btnStartDungeon.Name = "btnStartDungeon";
+            btnStartDungeon.Size = new Size(134, 23);
+            btnStartDungeon.TabIndex = 21;
+            btnStartDungeon.Text = "Wejdź do Lochów";
+            btnStartDungeon.UseVisualStyleBackColor = true;
+            btnStartDungeon.Click += btnStartDungeon_Click;
             // 
-            // lblMineStorage
+            // lblDungeonStats
             // 
-            lblMineStorage.AutoSize = true;
-            lblMineStorage.Font = new Font("Segoe UI", 12F);
-            lblMineStorage.Location = new Point(12, 40);
-            lblMineStorage.Name = "lblMineStorage";
-            lblMineStorage.Padding = new Padding(0, 0, 0, 10);
-            lblMineStorage.Size = new Size(159, 31);
-            lblMineStorage.TabIndex = 2;
-            lblMineStorage.Text = "Wykopane klejnoty: 0";
+            lblDungeonStats.AutoSize = true;
+            lblDungeonStats.Font = new Font("Segoe UI", 12F);
+            lblDungeonStats.Location = new Point(12, 40);
+            lblDungeonStats.Name = "lblDungeonStats";
+            lblDungeonStats.Padding = new Padding(0, 0, 0, 10);
+            lblDungeonStats.Size = new Size(110, 31);
+            lblDungeonStats.TabIndex = 20;
+            lblDungeonStats.Text = "HP: 0 | DMG: 0";
             // 
-            // btnUpgradeMine
+            // lblDungeonBoss
             // 
-            btnUpgradeMine.Location = new Point(267, 10);
-            btnUpgradeMine.Name = "btnUpgradeMine";
-            btnUpgradeMine.Size = new Size(134, 23);
-            btnUpgradeMine.TabIndex = 17;
-            btnUpgradeMine.Text = "Ulepsz kopalnię";
-            btnUpgradeMine.UseVisualStyleBackColor = true;
-            btnUpgradeMine.Click += btnUpgradeMine_Click;
+            lblDungeonBoss.AutoSize = true;
+            lblDungeonBoss.Font = new Font("Segoe UI", 12F);
+            lblDungeonBoss.Location = new Point(12, 9);
+            lblDungeonBoss.Name = "lblDungeonBoss";
+            lblDungeonBoss.Padding = new Padding(0, 0, 0, 10);
+            lblDungeonBoss.Size = new Size(70, 31);
+            lblDungeonBoss.TabIndex = 19;
+            lblDungeonBoss.Text = "Boss: ???";
             // 
-            // btnCollectGems
+            // lblDungeonRewards
             // 
-            btnCollectGems.Location = new Point(267, 41);
-            btnCollectGems.Name = "btnCollectGems";
-            btnCollectGems.Size = new Size(134, 23);
-            btnCollectGems.TabIndex = 18;
-            btnCollectGems.Text = "Odbierz klejnoty";
-            btnCollectGems.UseVisualStyleBackColor = true;
-            btnCollectGems.Click += btnCollectGems_Click;
+            lblDungeonRewards.AutoSize = true;
+            lblDungeonRewards.Font = new Font("Segoe UI", 12F);
+            lblDungeonRewards.Location = new Point(12, 71);
+            lblDungeonRewards.Name = "lblDungeonRewards";
+            lblDungeonRewards.Padding = new Padding(0, 0, 0, 10);
+            lblDungeonRewards.Size = new Size(99, 31);
+            lblDungeonRewards.TabIndex = 23;
+            lblDungeonRewards.Text = "Nagrody: ???";
             // 
             // Form1
             // 
@@ -600,10 +663,12 @@
             tabPage2.PerformLayout();
             tabPage3.ResumeLayout(false);
             tabPage3.PerformLayout();
-            menuStrip1.ResumeLayout(false);
-            menuStrip1.PerformLayout();
             tabPage4.ResumeLayout(false);
             tabPage4.PerformLayout();
+            menuStrip1.ResumeLayout(false);
+            menuStrip1.PerformLayout();
+            tabPage5.ResumeLayout(false);
+            tabPage5.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -655,5 +720,10 @@
         private Button btnUpgradeMine;
         private Label lblMineStorage;
         private Label lblMineInfo;
+        private TabPage tabPage5;
+        private Label lblDungeonRewards;
+        private Button btnStartDungeon;
+        private Label lblDungeonStats;
+        private Label lblDungeonBoss;
     }
 }

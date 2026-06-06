@@ -213,6 +213,24 @@ namespace HeroSimulator.App
                 btnCollectGems.Enabled = h.HeroCastle.GemMine.StoredGems.Count > 0;
             }
 
+            var boss = _gameService.GetDungeonBoss(h.CurrentDungeonFloor);
+            if (boss != null)
+            {
+                lblDungeonBoss.Text = $"Pietro {h.CurrentDungeonFloor}: {boss.Name} (Poziom {boss.Level})";
+                lblDungeonStats.Text = $"HP: {boss.Hp} | DMG: {boss.Damage}";
+                lblDungeonRewards.Text = $"Nagroda: {boss.GoldReward}g, {boss.ExpReward} EXP, Gwarantowany Klejnot";
+                btnStartDungeon.Enabled = true;
+                btnStartDungeon.Text = "Wejdz do Lochow";
+            }
+            else
+            {
+                lblDungeonBoss.Text = "Lochy zostaly w pelni podbite!";
+                lblDungeonStats.Text = "Brak przeciwnikow.";
+                lblDungeonRewards.Text = "Wszystkie nagrody zostaly zdobyte.";
+                btnStartDungeon.Enabled = false;
+                btnStartDungeon.Text = "Koniec";
+            }
+
             lbBackpack.Items.Clear();
             foreach (var item in h.Backpack)
             {
@@ -429,17 +447,37 @@ namespace HeroSimulator.App
                 var quest = _currentQuests[lbQuests.SelectedIndex];
 
                 _gameService.PayEnergyForQuest(quest);
+                var combatInfo = _gameService.PrepareQuestCombat(quest);
 
-                using (var combatForm = new CombatForm(_gameService, quest))
+                using (var combatForm = new CombatForm(_gameService, combatInfo))
                 {
                     combatForm.ShowDialog();
                 }
 
                 RefreshTavern();
+                UpdateUI();
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void btnStartDungeon_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                var combatInfo = _gameService.PrepareDungeonCombat();
+                using (var combatForm = new CombatForm(_gameService, combatInfo))
+                {
+                    combatForm.ShowDialog();
+                }
+
+                UpdateUI();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Informacja", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 

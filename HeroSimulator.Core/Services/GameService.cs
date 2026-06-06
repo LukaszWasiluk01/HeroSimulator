@@ -33,6 +33,35 @@ namespace HeroSimulator.Core.Services
             return (hp, dmg);
         }
 
+        public DungeonEnemy GetDungeonBoss(int floor)
+        {
+            switch (floor)
+            {
+                case 1:
+                    return new DungeonEnemy("Szlam z Kanalow", 1, 250, 15, 100, 50);
+                case 2:
+                    return new DungeonEnemy("Wodz Goblinow", 5, 600, 35, 250, 150);
+                case 3:
+                    return new DungeonEnemy("Wskrzeszony Szkielet", 10, 1200, 60, 500, 300);
+                case 4:
+                    return new DungeonEnemy("Krol Orkow", 15, 2500, 100, 1000, 600);
+                case 5:
+                    return new DungeonEnemy("Mroczny Rycerz", 20, 5000, 180, 2000, 1200);
+                case 6:
+                    return new DungeonEnemy("Wielki Golem", 25, 10000, 300, 4000, 2500);
+                case 7:
+                    return new DungeonEnemy("Lisz", 30, 20000, 500, 7500, 5000);
+                case 8:
+                    return new DungeonEnemy("Demon z Otchlani", 40, 40000, 800, 15000, 10000);
+                case 9:
+                    return new DungeonEnemy("Smoczy Wladca", 50, 80000, 1200, 30000, 20000);
+                case 10:
+                    return new DungeonEnemy("Mroczny Pan", 60, 150000, 2000, 100000, 50000);
+                default:
+                    return null;
+            }
+        }
+
         public List<Quest> GenerateDailyQuests(int count = 3)
         {
             var possibleQuests = new List<Quest>
@@ -132,6 +161,41 @@ namespace HeroSimulator.Core.Services
             OnGameStateChanged?.Invoke();
         }
 
+        public CombatInfo PrepareQuestCombat(Quest quest)
+        {
+            var enemyStats = GetEnemyStats(quest.Difficulty);
+            return new CombatInfo
+            {
+                EnemyName = "Potwor",
+                EnemyMaxHp = enemyStats.Hp,
+                EnemyDamage = enemyStats.Damage,
+                GoldReward = quest.GoldReward,
+                ExpReward = quest.ExperienceReward,
+                IsDungeon = false,
+                Description = quest.Description
+            };
+        }
+
+        public CombatInfo PrepareDungeonCombat()
+        {
+            var boss = GetDungeonBoss(_hero.CurrentDungeonFloor);
+            if (boss == null)
+            {
+                throw new InvalidOperationException("Pokonales juz wszystkich bossow! Gratulacje!");
+            }
+
+            return new CombatInfo
+            {
+                EnemyName = boss.Name,
+                EnemyMaxHp = boss.Hp,
+                EnemyDamage = boss.Damage,
+                GoldReward = boss.GoldReward,
+                ExpReward = boss.ExpReward,
+                IsDungeon = true,
+                Description = $"Walka z Bossem: {boss.Name} (Pietro {_hero.CurrentDungeonFloor})"
+            };
+        }
+
         public CombatTurnResult ExecuteCombatTurn(int currentHeroHp, int currentEnemyHp, int enemyDamage, bool isPerfectHit)
         {
             int baseDamage = _hero.CalculateDamage();
@@ -192,24 +256,55 @@ namespace HeroSimulator.Core.Services
             };
         }
 
-        public void ResolveCombat(Quest quest, bool won, int remainingHp)
+        public void ResolveCombat(CombatInfo combatInfo, bool won, int remainingHp)
         {
             _hero.CurrentHp = Math.Max(1, remainingHp);
 
             if (won)
             {
-                _hero.Gold += quest.GoldReward;
-                _hero.Experience += quest.ExperienceReward;
-                OnLogMessage?.Invoke($"Wygrana! {quest.Description}. Zdobyto {quest.GoldReward}g.");
+                _hero.Gold += combatInfo.GoldReward;
+                _hero.Experience += combatInfo.ExpReward;
+                OnLogMessage?.Invoke($"Wygrana! {combatInfo.Description}. Zdobyto {combatInfo.GoldReward}g.");
 
-                if (_hero.Experience >= _hero.ExperienceToNextLevel)
+                if (combatInfo.IsDungeon)
+                {
+                    int currentFloor = _hero.CurrentDungeonFloor;
+                    _hero.CurrentDungeonFloor++;
+                    OnLogMessage?.Invoke($"Pokonano Bossa Lochow! Odblokowano pietro {_hero.CurrentDungeonFloor}.");
+
+                    int statBonus = currentFloor * 5;
+                    Gem rewardGem = new Gem($"Klejnot Bossa (Pietro {currentFloor})", ItemRarity.Rare) { Price = statBonus * 10 };
+
+                    int gemType = _random.Next(0, 4);
+                    if (gemType == 0)
+                        rewardGem.BonusStrength = statBonus;
+                    else if (gemType == 1)
+                        rewardGem.BonusDexterity = statBonus;
+                    else if (gemType == 2)
+                        rewardGem.BonusIntelligence = statBonus;
+                    else
+                        rewardGem.BonusLuck = statBonus;
+
+                    if (_hero.Backpack.Count < 10)
+                    {
+                        _hero.Backpack.Add(rewardGem);
+                        OnLogMessage?.Invoke($"Otrzymujesz rzadki artefakt: {rewardGem.Name}!");
+                    }
+                    else
+                    {
+                        _hero.Gold += rewardGem.Price;
+                        OnLogMessage?.Invoke($"Plecak pelen! Bossa upuscil zamiast tego {rewardGem.Price}g.");
+                    }
+                }
+
+                while (_hero.Experience >= _hero.ExperienceToNextLevel)
                 {
                     LevelUp();
                 }
             }
             else
             {
-                OnLogMessage?.Invoke($"Porazka... Uciekasz z {remainingHp} HP z misji: {quest.Description}.");
+                OnLogMessage?.Invoke($"Porazka... Uciekasz z {remainingHp} HP z walki: {combatInfo.Description}.");
             }
 
             OnGameStateChanged?.Invoke();

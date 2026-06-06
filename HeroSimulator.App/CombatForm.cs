@@ -6,7 +6,7 @@ namespace HeroSimulator.App
     public partial class CombatForm : Form
     {
         private readonly GameService _gameService;
-        private readonly Quest _quest;
+        private readonly CombatInfo _combatInfo;
 
         private int _heroHp;
         private int _enemyHp;
@@ -16,11 +16,11 @@ namespace HeroSimulator.App
         private int _indicatorSpeed = 15;
         private int _indicatorDirection = 1;
 
-        public CombatForm(GameService gameService, Quest quest)
+        public CombatForm(GameService gameService, CombatInfo combatInfo)
         {
             InitializeComponent();
             _gameService = gameService;
-            _quest = quest;
+            _combatInfo = combatInfo;
 
             pnlTimingBar.BackColor = Color.LightGray;
 
@@ -59,10 +59,9 @@ namespace HeroSimulator.App
             var hero = _gameService.GetHero();
             _heroHp = hero.CurrentHp;
 
-            var enemyStats = _gameService.GetEnemyStats(_quest.Difficulty);
-            _enemyHp = enemyStats.Hp;
-            _enemyMaxHp = enemyStats.Hp;
-            _enemyDamage = enemyStats.Damage;
+            _enemyHp = _combatInfo.EnemyMaxHp;
+            _enemyMaxHp = _combatInfo.EnemyMaxHp;
+            _enemyDamage = _combatInfo.EnemyDamage;
 
             pbHeroHp.Maximum = hero.MaxHp;
             pbHeroHp.Value = _heroHp;
@@ -70,7 +69,7 @@ namespace HeroSimulator.App
 
             pbEnemyHp.Maximum = _enemyMaxHp;
             pbEnemyHp.Value = _enemyHp;
-            lblEnemyInfo.Text = $"Przeciwnik (HP: {_enemyHp}/{_enemyMaxHp})";
+            lblEnemyInfo.Text = $"{_combatInfo.EnemyName} (HP: {_enemyHp}/{_enemyMaxHp})";
 
             tmrIndicator.Start();
         }
@@ -161,7 +160,7 @@ namespace HeroSimulator.App
             lblHeroInfo.Text = $"{hero.Name} (HP: {Math.Max(0, _heroHp)}/{hero.MaxHp})";
 
             pbEnemyHp.Value = Math.Max(0, _enemyHp);
-            lblEnemyInfo.Text = $"Przeciwnik (HP: {Math.Max(0, _enemyHp)}/{_enemyMaxHp})";
+            lblEnemyInfo.Text = $"{_combatInfo.EnemyName} (HP: {Math.Max(0, _enemyHp)}/{_enemyMaxHp})";
         }
 
         private bool CheckCombatEnd()
@@ -171,7 +170,7 @@ namespace HeroSimulator.App
                 tmrIndicator.Stop();
                 btnAttack.Enabled = false;
                 MessageBox.Show("Zwyciestwo! Pokonales przeciwnika.", "Koniec Walki", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                _gameService.ResolveCombat(_quest, true, _heroHp);
+                _gameService.ResolveCombat(_combatInfo, true, _heroHp);
                 this.Close();
                 return true;
             }
@@ -180,7 +179,7 @@ namespace HeroSimulator.App
                 tmrIndicator.Stop();
                 btnAttack.Enabled = false;
                 MessageBox.Show("Porazka... Zostales pokonany.", "Koniec Walki", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                _gameService.ResolveCombat(_quest, false, 1);
+                _gameService.ResolveCombat(_combatInfo, false, 1);
                 this.Close();
                 return true;
             }

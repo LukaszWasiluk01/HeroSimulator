@@ -34,6 +34,10 @@ namespace HeroSimulator.Core.Models.Entities
         {
             get; set;
         }
+        public int CurrentDungeonFloor
+        {
+            get; set;
+        }
         public List<Item> Backpack
         {
             get; set;
@@ -57,6 +61,7 @@ namespace HeroSimulator.Core.Models.Entities
             CurrentHp = 100;
             Experience = 0;
             ExperienceToNextLevel = 100;
+            CurrentDungeonFloor = 1;
             Backpack = new List<Item>();
             Equipment = new Dictionary<ItemSlot, Item>();
             HeroCastle = new Castle();
