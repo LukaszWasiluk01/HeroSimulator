@@ -208,18 +208,8 @@ namespace HeroSimulator.Core.Services
             }
 
             bool isCrit = false;
-            int totalLuck = _hero.Luck;
-            foreach (var item in _hero.Equipment.Values)
-            {
-                totalLuck += item.BonusLuck;
+            int critChance = _hero.CalculateCriticalChance();
 
-                foreach (var gem in item.SocketedGems)
-                {
-                    totalLuck += gem.BonusLuck;
-                }
-            }
-
-            int critChance = totalLuck * 2;
             if (_random.Next(1, 101) <= critChance)
             {
                 randomizedDamage *= 2;

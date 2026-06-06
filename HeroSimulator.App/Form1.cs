@@ -180,7 +180,7 @@ namespace HeroSimulator.App
             }
 
             lblName.Text = $"[{className.ToUpper()}] {h.Name} | DMG: {h.CalculateDamage()} | Pancerz: {h.Armour + bArm}";
-            lblLevel.Text = $"Poziom: {h.Level} | HP: {h.CurrentHp}/{h.MaxHp} | POTEGA: {h.CalculateTotalPower()}";
+            lblLevel.Text = $"Poziom: {h.Level} (EXP: {h.Experience}/{h.ExperienceToNextLevel}) | HP: {h.CurrentHp}/{h.MaxHp} | POTEGA: {h.CalculateTotalPower()}";
             lblGold.Text = $"Zloto: {h.Gold}";
             lblDay.Text = $"Dzien: {h.CurrentDay}";
 
@@ -198,7 +198,7 @@ namespace HeroSimulator.App
             lblStr.Text = $"STR: {h.Strength + bStr} ({h.Strength}+{bStr}) " + (h is Warrior ? "[+2 DMG/pkt]" : "");
             lblDex.Text = $"DEX: {h.Dexterity + bDex} ({h.Dexterity}+{bDex}) " + (h is Scout ? "[+2 DMG/pkt]" : "");
             lblInt.Text = $"INT: {h.Intelligence + bInt} ({h.Intelligence}+{bInt}) " + (h is Mage ? "[+3 DMG/pkt]" : "");
-            lblLuck.Text = $"LUCK: {h.Luck + bLuck} ({h.Luck}+{bLuck}) [Szansa na kryt.]";
+            lblLuck.Text = $"LUCK: {h.Luck + bLuck} ({h.Luck}+{bLuck}) [Kryt: {h.CalculateCriticalChance()}%]";
 
             btnBuyStr.Text = $"+1 ({_gameService.GetAttributeUpgradeCost(h.Strength)}g)";
             btnBuyDex.Text = $"+1 ({_gameService.GetAttributeUpgradeCost(h.Dexterity)}g)";

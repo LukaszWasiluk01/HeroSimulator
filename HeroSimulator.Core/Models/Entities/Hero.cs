@@ -85,6 +85,26 @@ namespace HeroSimulator.Core.Models.Entities
             return basePower + equipmentPower;
         }
 
+        public int CalculateTotalLuck()
+        {
+            int totalLuck = Luck;
+            foreach (var item in Equipment.Values)
+            {
+                totalLuck += item.BonusLuck;
+
+                foreach (var gem in item.SocketedGems)
+                {
+                    totalLuck += gem.BonusLuck;
+                }
+            }
+            return totalLuck;
+        }
+
+        public int CalculateCriticalChance()
+        {
+            return Math.Min(100, CalculateTotalLuck() * 2);
+        }
+
         public abstract int CalculateDamage();
     }
 }
