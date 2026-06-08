@@ -15,6 +15,7 @@ namespace HeroSimulator.App
 
         private int _indicatorSpeed = 15;
         private int _indicatorDirection = 1;
+        private bool _combatResolved = false;
 
         public CombatForm(GameService gameService, CombatInfo combatInfo)
         {
@@ -171,6 +172,7 @@ namespace HeroSimulator.App
                 btnAttack.Enabled = false;
                 MessageBox.Show("Zwyciestwo! Pokonales przeciwnika.", "Koniec Walki", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 _gameService.ResolveCombat(_combatInfo, true, _heroHp);
+                _combatResolved = true;
                 this.Close();
                 return true;
             }
@@ -180,11 +182,23 @@ namespace HeroSimulator.App
                 btnAttack.Enabled = false;
                 MessageBox.Show("Porazka... Zostales pokonany.", "Koniec Walki", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 _gameService.ResolveCombat(_combatInfo, false, 1);
+                _combatResolved = true;
                 this.Close();
                 return true;
             }
 
             return false;
+        }
+
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            if (!_combatResolved)
+            {
+                tmrIndicator.Stop();
+                _gameService.ResolveCombat(_combatInfo, false, Math.Max(1, _heroHp));
+                _combatResolved = true;
+            }
+            base.OnFormClosing(e);
         }
     }
 }

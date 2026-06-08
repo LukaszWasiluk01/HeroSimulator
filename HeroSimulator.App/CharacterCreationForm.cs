@@ -18,7 +18,7 @@ namespace HeroSimulator.App
         private void btnCreate_Click(object sender, EventArgs e)
         {
             string name = string.IsNullOrWhiteSpace(tbName.Text) ? "Bohater" : tbName.Text;
-            string selectedClass = cbClass.SelectedItem.ToString();
+            string selectedClass = cbClass.SelectedItem?.ToString() ?? "Wojownik";
 
             if (selectedClass == "Mag")
                 CreatedHero = new Mage(name);

@@ -8,11 +8,12 @@ namespace HeroSimulator.App
 {
     public partial class Form1 : Form
     {
-        private GameService _gameService;
+        private GameService? _gameService;
         private readonly SaveLoadService _saveLoadService;
         private readonly string _saveFilePath = "savegame.json";
-        private List<Quest> _currentQuests;
-        private List<Item> _currentShopItems;
+        private List<Quest>? _currentQuests;
+        private List<Item>? _currentShopItems;
+        private bool _isRestarting = false;
 
         public Form1()
         {
@@ -48,7 +49,10 @@ namespace HeroSimulator.App
                 if (creationForm.ShowDialog() == DialogResult.OK)
                 {
                     InitializeGameService(creationForm.CreatedHero);
-                    _saveLoadService.SaveGame(_gameService.GetHero(), _saveFilePath);
+                    if (_gameService != null)
+                    {
+                        _saveLoadService.SaveGame(_gameService.GetHero(), _saveFilePath);
+                    }
                     AddLog("Utworzono nowa postac.");
                 }
                 else
@@ -156,6 +160,9 @@ namespace HeroSimulator.App
 
         private void UpdateUI()
         {
+            if (_gameService == null)
+                return;
+
             var h = _gameService.GetHero();
             string className = h is Warrior ? "Wojownik" : h is Mage ? "Mag" : "Zwiadowca";
 
@@ -248,6 +255,9 @@ namespace HeroSimulator.App
 
         private void RefreshTavern()
         {
+            if (_gameService == null)
+                return;
+
             _currentQuests = _gameService.GenerateDailyQuests(3);
             lbQuests.Items.Clear();
             foreach (var q in _currentQuests)
@@ -259,6 +269,9 @@ namespace HeroSimulator.App
 
         private void RefreshShop()
         {
+            if (_gameService == null)
+                return;
+
             _currentShopItems = _gameService.GenerateShopItems(5);
             lbShop.Items.Clear();
             foreach (var i in _currentShopItems)
@@ -269,6 +282,8 @@ namespace HeroSimulator.App
 
         private void btnBuyStr_Click(object sender, EventArgs e)
         {
+            if (_gameService == null)
+                return;
             try
             {
                 _gameService.UpgradeStrength();
@@ -281,6 +296,8 @@ namespace HeroSimulator.App
 
         private void btnBuyDex_Click(object sender, EventArgs e)
         {
+            if (_gameService == null)
+                return;
             try
             {
                 _gameService.UpgradeDexterity();
@@ -293,6 +310,8 @@ namespace HeroSimulator.App
 
         private void btnBuyInt_Click(object sender, EventArgs e)
         {
+            if (_gameService == null)
+                return;
             try
             {
                 _gameService.UpgradeIntelligence();
@@ -305,6 +324,8 @@ namespace HeroSimulator.App
 
         private void btnBuyLuck_Click(object sender, EventArgs e)
         {
+            if (_gameService == null)
+                return;
             try
             {
                 _gameService.UpgradeLuck();
@@ -317,6 +338,8 @@ namespace HeroSimulator.App
 
         private void btnSell_Click(object sender, EventArgs e)
         {
+            if (_gameService == null)
+                return;
             if (lbBackpack.SelectedIndex != -1)
             {
                 _gameService.SellItem(_gameService.GetHero().Backpack[lbBackpack.SelectedIndex]);
@@ -325,6 +348,8 @@ namespace HeroSimulator.App
 
         private void btnEquip_Click(object sender, EventArgs e)
         {
+            if (_gameService == null)
+                return;
             try
             {
                 var h = _gameService.GetHero();
@@ -353,6 +378,8 @@ namespace HeroSimulator.App
 
         private void btnSocketGem_Click(object sender, EventArgs e)
         {
+            if (_gameService == null)
+                return;
             try
             {
                 var h = _gameService.GetHero();
@@ -398,6 +425,8 @@ namespace HeroSimulator.App
 
         private void btnUpgradeMine_Click(object sender, EventArgs e)
         {
+            if (_gameService == null)
+                return;
             try
             {
                 _gameService.UpgradeMine();
@@ -410,6 +439,8 @@ namespace HeroSimulator.App
 
         private void btnCollectGems_Click(object sender, EventArgs e)
         {
+            if (_gameService == null)
+                return;
             try
             {
                 _gameService.CollectGemsFromMine();
@@ -422,7 +453,7 @@ namespace HeroSimulator.App
 
         private void btnStartQuest_Click(object sender, EventArgs e)
         {
-            if (lbQuests.SelectedIndex == -1)
+            if (_gameService == null || _currentQuests == null || lbQuests.SelectedIndex == -1)
             {
                 return;
             }
@@ -450,6 +481,8 @@ namespace HeroSimulator.App
 
         private void btnStartDungeon_Click(object sender, EventArgs e)
         {
+            if (_gameService == null)
+                return;
             try
             {
                 var combatInfo = _gameService.PrepareDungeonCombat();
@@ -468,6 +501,8 @@ namespace HeroSimulator.App
 
         private void btnEndDay_Click(object sender, EventArgs e)
         {
+            if (_gameService == null)
+                return;
             lbLogs.Items.Clear();
             _gameService.EndDay();
             RefreshTavern();
@@ -476,7 +511,7 @@ namespace HeroSimulator.App
 
         private void btnBuyItem_Click(object sender, EventArgs e)
         {
-            if (lbShop.SelectedIndex == -1)
+            if (_gameService == null || _currentShopItems == null || lbShop.SelectedIndex == -1)
             {
                 return;
             }
@@ -496,6 +531,7 @@ namespace HeroSimulator.App
 
         private void btnRestartGame_Click(object sender, EventArgs e)
         {
+            _isRestarting = true;
             if (File.Exists(_saveFilePath))
             {
                 File.Delete(_saveFilePath);
@@ -505,13 +541,16 @@ namespace HeroSimulator.App
 
         private void btnSaveGame_Click(object sender, EventArgs e)
         {
-            _saveLoadService.SaveGame(_gameService.GetHero(), _saveFilePath);
-            AddLog("Zapisano gre.");
+            if (_gameService != null)
+            {
+                _saveLoadService.SaveGame(_gameService.GetHero(), _saveFilePath);
+                AddLog("Zapisano gre.");
+            }
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (_gameService != null)
+            if (_gameService != null && !_isRestarting)
             {
                 _saveLoadService.SaveGame(_gameService.GetHero(), _saveFilePath);
             }
