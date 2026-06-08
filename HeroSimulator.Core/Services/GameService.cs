@@ -12,8 +12,8 @@ namespace HeroSimulator.Core.Services
         private readonly Hero _hero;
         private readonly Random _random;
 
-        public event GameStateChangedHandler OnGameStateChanged;
-        public event LogMessageHandler OnLogMessage;
+        public event GameStateChangedHandler? OnGameStateChanged;
+        public event LogMessageHandler? OnLogMessage;
 
         public GameService(Hero hero)
         {
@@ -33,7 +33,7 @@ namespace HeroSimulator.Core.Services
             return (hp, dmg);
         }
 
-        public DungeonEnemy GetDungeonBoss(int floor)
+        public DungeonEnemy? GetDungeonBoss(int floor)
         {
             switch (floor)
             {
@@ -178,7 +178,7 @@ namespace HeroSimulator.Core.Services
             return new CombatInfo
             {
                 EnemyName = boss.Name,
-                EnemyMaxHp = boss.Hp,
+                EnemyMaxHp = boss.MaxHp,
                 EnemyDamage = boss.Damage,
                 GoldReward = boss.GoldReward,
                 ExpReward = boss.ExpReward,
@@ -397,7 +397,7 @@ namespace HeroSimulator.Core.Services
 
         public int GetAttributeUpgradeCost(int currentValue)
         {
-            return 10 + (currentValue * 5);
+            return 10 + (currentValue * currentValue / 2);
         }
 
         public void UpgradeStrength()

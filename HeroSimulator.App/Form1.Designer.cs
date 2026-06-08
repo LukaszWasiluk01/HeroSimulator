@@ -70,22 +70,22 @@
             btnUpgradeMine = new Button();
             lblMineStorage = new Label();
             lblMineInfo = new Label();
+            tabPage5 = new TabPage();
+            lblDungeonRewards = new Label();
+            btnStartDungeon = new Button();
+            lblDungeonStats = new Label();
+            lblDungeonBoss = new Label();
             plikToolStripMenuItem = new ToolStripMenuItem();
             btnRestartGame = new ToolStripMenuItem();
             btnSaveGame = new ToolStripMenuItem();
             menuStrip1 = new MenuStrip();
-            tabPage5 = new TabPage();
-            btnStartDungeon = new Button();
-            lblDungeonStats = new Label();
-            lblDungeonBoss = new Label();
-            lblDungeonRewards = new Label();
             tabControl1.SuspendLayout();
             tabPage1.SuspendLayout();
             tabPage2.SuspendLayout();
             tabPage3.SuspendLayout();
             tabPage4.SuspendLayout();
-            menuStrip1.SuspendLayout();
             tabPage5.SuspendLayout();
+            menuStrip1.SuspendLayout();
             SuspendLayout();
             // 
             // tabControl1
@@ -559,36 +559,6 @@
             lblMineInfo.TabIndex = 1;
             lblMineInfo.Text = "Kopalnia Klejnotów (Poziom 1)";
             // 
-            // plikToolStripMenuItem
-            // 
-            plikToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { btnRestartGame, btnSaveGame });
-            plikToolStripMenuItem.Name = "plikToolStripMenuItem";
-            plikToolStripMenuItem.Size = new Size(38, 20);
-            plikToolStripMenuItem.Text = "Plik";
-            // 
-            // btnRestartGame
-            // 
-            btnRestartGame.Name = "btnRestartGame";
-            btnRestartGame.Size = new Size(160, 22);
-            btnRestartGame.Text = "Zacznij od nowa";
-            btnRestartGame.Click += btnRestartGame_Click;
-            // 
-            // btnSaveGame
-            // 
-            btnSaveGame.Name = "btnSaveGame";
-            btnSaveGame.Size = new Size(160, 22);
-            btnSaveGame.Text = "Zapisz grę";
-            btnSaveGame.Click += btnSaveGame_Click;
-            // 
-            // menuStrip1
-            // 
-            menuStrip1.Items.AddRange(new ToolStripItem[] { plikToolStripMenuItem });
-            menuStrip1.Location = new Point(0, 0);
-            menuStrip1.Name = "menuStrip1";
-            menuStrip1.Size = new Size(800, 24);
-            menuStrip1.TabIndex = 0;
-            menuStrip1.Text = "menuStrip1";
-            // 
             // tabPage5
             // 
             tabPage5.Controls.Add(lblDungeonRewards);
@@ -601,6 +571,17 @@
             tabPage5.TabIndex = 4;
             tabPage5.Text = "Lochy";
             tabPage5.UseVisualStyleBackColor = true;
+            // 
+            // lblDungeonRewards
+            // 
+            lblDungeonRewards.AutoSize = true;
+            lblDungeonRewards.Font = new Font("Segoe UI", 12F);
+            lblDungeonRewards.Location = new Point(12, 71);
+            lblDungeonRewards.Name = "lblDungeonRewards";
+            lblDungeonRewards.Padding = new Padding(0, 0, 0, 10);
+            lblDungeonRewards.Size = new Size(99, 31);
+            lblDungeonRewards.TabIndex = 23;
+            lblDungeonRewards.Text = "Nagrody: ???";
             // 
             // btnStartDungeon
             // 
@@ -634,16 +615,35 @@
             lblDungeonBoss.TabIndex = 19;
             lblDungeonBoss.Text = "Boss: ???";
             // 
-            // lblDungeonRewards
+            // plikToolStripMenuItem
             // 
-            lblDungeonRewards.AutoSize = true;
-            lblDungeonRewards.Font = new Font("Segoe UI", 12F);
-            lblDungeonRewards.Location = new Point(12, 71);
-            lblDungeonRewards.Name = "lblDungeonRewards";
-            lblDungeonRewards.Padding = new Padding(0, 0, 0, 10);
-            lblDungeonRewards.Size = new Size(99, 31);
-            lblDungeonRewards.TabIndex = 23;
-            lblDungeonRewards.Text = "Nagrody: ???";
+            plikToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { btnRestartGame, btnSaveGame });
+            plikToolStripMenuItem.Name = "plikToolStripMenuItem";
+            plikToolStripMenuItem.Size = new Size(38, 20);
+            plikToolStripMenuItem.Text = "Plik";
+            // 
+            // btnRestartGame
+            // 
+            btnRestartGame.Name = "btnRestartGame";
+            btnRestartGame.Size = new Size(160, 22);
+            btnRestartGame.Text = "Zacznij od nowa";
+            btnRestartGame.Click += btnRestartGame_Click;
+            // 
+            // btnSaveGame
+            // 
+            btnSaveGame.Name = "btnSaveGame";
+            btnSaveGame.Size = new Size(160, 22);
+            btnSaveGame.Text = "Zapisz grę";
+            btnSaveGame.Click += btnSaveGame_Click;
+            // 
+            // menuStrip1
+            // 
+            menuStrip1.Items.AddRange(new ToolStripItem[] { plikToolStripMenuItem });
+            menuStrip1.Location = new Point(0, 0);
+            menuStrip1.Name = "menuStrip1";
+            menuStrip1.Size = new Size(800, 24);
+            menuStrip1.TabIndex = 0;
+            menuStrip1.Text = "menuStrip1";
             // 
             // Form1
             // 
@@ -655,6 +655,7 @@
             MainMenuStrip = menuStrip1;
             Name = "Form1";
             Text = "Hero Simulator";
+            FormClosing += Form1_FormClosing;
             Load += Form1_Load;
             tabControl1.ResumeLayout(false);
             tabPage1.ResumeLayout(false);
@@ -665,10 +666,10 @@
             tabPage3.PerformLayout();
             tabPage4.ResumeLayout(false);
             tabPage4.PerformLayout();
-            menuStrip1.ResumeLayout(false);
-            menuStrip1.PerformLayout();
             tabPage5.ResumeLayout(false);
             tabPage5.PerformLayout();
+            menuStrip1.ResumeLayout(false);
+            menuStrip1.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }

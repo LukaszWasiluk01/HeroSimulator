@@ -202,7 +202,7 @@ namespace HeroSimulator.App
             if (boss != null)
             {
                 lblDungeonBoss.Text = $"Pietro {h.CurrentDungeonFloor}: {boss.Name} (Poziom {boss.Level})";
-                lblDungeonStats.Text = $"HP: {boss.Hp} | DMG: {boss.Damage}";
+                lblDungeonStats.Text = $"HP: {boss.MaxHp} | DMG: {boss.Damage}";
                 lblDungeonRewards.Text = $"Nagroda: {boss.GoldReward}g, {boss.ExpReward} EXP, Gwarantowany Klejnot";
                 btnStartDungeon.Enabled = true;
                 btnStartDungeon.Text = "Wejdz do Lochow";

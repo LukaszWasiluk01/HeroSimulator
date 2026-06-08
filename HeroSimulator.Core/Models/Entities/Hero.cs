@@ -51,6 +51,27 @@ namespace HeroSimulator.Core.Models.Entities
             get; set;
         }
 
+        public int Strength
+        {
+            get; set;
+        }
+        public int Dexterity
+        {
+            get; set;
+        }
+        public int Intelligence
+        {
+            get; set;
+        }
+        public int Armour
+        {
+            get; set;
+        }
+        public int Luck
+        {
+            get; set;
+        }
+
         [JsonIgnore]
         public int TotalStrength
         {
@@ -147,7 +168,7 @@ namespace HeroSimulator.Core.Models.Entities
             HeroCastle = new Castle();
         }
 
-        public override int CalculateTotalPower()
+        public virtual int CalculateTotalPower()
         {
             return TotalStrength + TotalDexterity + TotalIntelligence + TotalArmour + TotalLuck;
         }
